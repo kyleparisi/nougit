@@ -1,5 +1,5 @@
 /*
-	Nougit - nougit.js
+	Nougit - setup.js
 	Author: Gordon Hall
 
 	Copyright (c) 2012 Gordon Hall
