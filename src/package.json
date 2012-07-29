@@ -1,10 +1,11 @@
 {
-	"name": "Nougit",
+	"name" : "Nougit",
 	"description": "Open source repository management interface for Git",
-	"author": "Gordon Hall <gordon@gordonwritescode.com>",
+	"author" : "Gordon Hall <gordon@gordonwritescode.com>",
 	"dependencies": {
-		"jade": "0.x.x",
-		"express": "3.0.x"
+		"jade" : "0.x.x",
+		"express" : "3.0.x",
+		"mongojs" : "0.4.x"
 	},
-	"engine": "node >= 0.8.x"
+	"engine" : "node >= 0.8.x"
 }
