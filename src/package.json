@@ -1,5 +1,5 @@
 {
-	"name": "NougitServer",
+	"name": "Nougit",
 	"description": "Open source repository management interface for Git",
 	"author": "Gordon Hall <gordon@gordonwritescode.com>",
 	"dependencies": {
