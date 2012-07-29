@@ -1,0 +1,10 @@
+{
+	"name": "NougitServer",
+	"description": "Open source repository management interface for Git",
+	"author": "Gordon Hall <gordon@gordonwritescode.com>",
+	"dependencies": {
+		"jade": "0.x.x",
+		"express": "3.0.x"
+	},
+	"engine": "node >= 0.8.x"
+}
