@@ -18,3 +18,30 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 	DEALINGS IN THE SOFTWARE.
 */
+
+module.exports = (function() {}
+
+	function commitLog(callback) {
+
+		var output = '{',
+			command = 'git log --pretty=format:\'"%h": {%n  "commit": "%H",%n  "author": "%an <%ae>",%n  "date": "%ad",%n  "message": "%s"%n},\'';
+
+		require('util').exec(command, function(err, stdout, stderr) {
+			if (stdout) {
+				output += stdout.substring(0,stdout.length - 1);
+				output += '}';
+				output = JSON.parse(output);
+				if (callback) {
+					callback.call(this, output);
+				}
+			}
+		});
+	  
+	}
+	
+	return {
+		commitLog : commitLog
+	};
+  
+)();
+
