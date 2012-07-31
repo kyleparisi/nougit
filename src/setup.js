@@ -18,3 +18,92 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 	DEALINGS IN THE SOFTWARE.
 */
+
+module.exports = (function() {
+	
+	var fs = require('fs'),
+	    exec = require('child_process').exec,
+	    config;
+	
+	/*
+	 * complete() - private
+	 * runs a check and returns boolean if needs configuration
+	 */
+	function complete() {
+		var path = process.cwd() + '/config.json';
+		if (fs.existsSync(path)) {
+			config = JSON.parse(fs.readFileSync(path, 'utf8'));
+			return (config['user'] && config['email'] && config['git_version'] && config['node_version'] && config['repository_dir']);
+		} else {
+			return false;
+		}
+	}
+	
+	/*
+	 * config() - private
+	 * takes a configuration object
+	 */
+	function setup(callback) {
+		console.log('Running initial configuration...')
+		var user, 
+		    email, 
+		    git_version, 
+		    node_version = process.versions['node'], 
+		    repository_dir = '/nougit';
+		
+		exec('git config --global user.name', function(err, stdout, stderr) {
+			if (err || stderr) {
+				console.log(err || stderr)
+			} else if (stdout) {
+				user = stdout.replace(/(\r\n|\n|\r)/gm,'');
+				console.log('User: ' + user);
+				exec('git config --global user.email', function(err, stdout, stderr) {
+					if (err || stderr) {
+						console.log(err || stderr)
+					} else if (stdout) {
+						email = stdout.replace(/(\r\n|\n|\r)/gm,'');
+						console.log('Email: ' + email);
+						exec('git --version', function(err, stdout, stderr) {
+							if (err || stderr) {
+								console.log(err || stderr)
+							} else if (stdout) {
+								git_version = stdout.replace(/(\r\n|\n|\r)/gm,'');
+								console.log('Git Version: ' + git_version);
+								
+								console.log('Node Version: ' + node_version);
+								console.log('Repository Directory: ' + repository_dir);
+								
+								config = {
+									user : user,
+									email : email,
+									git_version : git_version,
+									node_version : node_version,
+									repository_dir : repository_dir
+								}
+								callback.call(this, config);
+								fs.writeFileSync('config.json', JSON.stringify(config));
+							}
+						});
+					}
+				});
+			}
+		});
+	}
+	
+	/*
+	 * init() - public
+	 */
+	function init(callback) {
+		if (!complete()) {
+			setup(callback);
+		} else {
+			callback.call(this, config);
+		}
+	}
+	
+	return {
+		init : init,
+		config : config
+	};
+	
+})();

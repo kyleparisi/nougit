@@ -18,3 +18,68 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 	DEALINGS IN THE SOFTWARE.
 */
+
+(function() {
+	
+	// init vars
+	var config,
+	    setup = require('./setup.js'),
+	    git = require('./nodegit.js'),
+	    express = require('express'),
+	    jade = require('jade'),
+	    db = require('mongojs'),
+	    app = module.exports = express.createServer();
+
+	// get user configs
+	setup.init(function(data) {
+		config = data;
+	});
+
+	// config server
+	app.configure(function() {
+
+		// set view directory and engine
+		app.set('views', __dirname + '/views');
+		app.set('view engine', 'jade');
+
+		// methodOverride checks req.body.method for the HTTP method override
+		// bodyParser parses the request body and populates req.body
+		app.use(express.bodyParser());
+		app.use(express.methodOverride());
+
+		// use cookie parser
+		app.use(express.cookieParser());
+
+		// set public directory for static files
+		app.use(express.static(__dirname + '/public'));
+
+		// use router for non-static files
+		app.use(app.router);
+
+	});
+
+	// dev env
+	app.configure('development', function(){
+		app.use(express.errorHandler({
+			dumpExceptions: true, 
+			showStack: true 
+		}));
+	});
+
+	// prod env
+	app.configure('production', function(){
+		app.use(express.errorHandler());
+	});
+		
+	
+	
+	/*
+	 * Start Server
+	 */
+
+	app.listen(8080, function() {
+		console.log("Nougit Running at port %d in %s mode", app.address().port, app.settings.env);
+	});
+	
+	
+})();
