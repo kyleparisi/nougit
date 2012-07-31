@@ -23,12 +23,17 @@
 	
 	// init vars
 	var config,
+	// get native modules
 	    fs = require('fs'),
+	// get app modules
 	    setup = require('./setup.js'),
 	    git = require('./git.js'),
+    	nougit = require('./main.js'),
+	// get middleware
 	    express = require('express'),
 	    jade = require('jade'),
 	    db = require('mongojs'),
+	// create express server
 	    app = module.exports = express.createServer();
 
 	// get user configs
