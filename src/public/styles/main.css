@@ -1,0 +1,18 @@
+/*
+ * Nougit - main.css
+ * Author: Gordon Hall
+ */
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Capriola', Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Lobster', Helvetica, sans-serif;
+}
+
+.code {
+	font-family: 'UbuntuMono', Monaco, monospace;
+}

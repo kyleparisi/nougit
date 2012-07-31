@@ -1,0 +1,48 @@
+/*
+ * Nougit - fonts.css
+ * Author: Gordon Hall
+ */
+
+/* Capriola - Main type
+*/
+@font-face {
+    font-family: Capriola;
+    src: url('/styles/fonts/Capriola-Regular');
+    font-weight: normal;
+}
+
+/* Lobster - Headings
+*/
+@font-face {
+    font-family: Lobster;
+    src: url('/styles/fonts/Lobster.ttf');
+    font-weight: normal;
+}
+
+/* Ubuntu Mono - Code blocks and source
+*/
+@font-face {
+    font-family: UbuntuMono;
+    src: url('/styles/fonts/UbuntuMono-Regular');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: UbuntuMono;
+    src: url('/styles/fonts/UbuntuMono-Bold');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: UbuntuMono;
+    src: url('/styles/fonts/UbuntuMono-Italic');
+    font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+    font-family: UbuntuMono;
+    src: url('/styles/fonts/UbuntuMono-BoldItalic');
+    font-weight: bold;
+	font-style: italic;
+}
