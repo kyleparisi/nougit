@@ -23,6 +23,7 @@
 	
 	// init vars
 	var config,
+	    fs = require('fs'),
 	    setup = require('./setup.js'),
 	    git = require('./nodegit.js'),
 	    express = require('express'),
@@ -71,14 +72,22 @@
 		app.use(express.errorHandler());
 	});
 		
+	/*
+	 * http routes
+	 */
 	
+	// render app
+	app.get('/', function(req, res) {
+		var cookies = req.cookies;
+		res.render('index', { });
+	});
 	
 	/*
 	 * start server
 	 */
 
 	app.listen(8080, function() {
-		console.log("Nougit Running at port %d in %s mode", app.address().port, app.settings.env);
+		console.log('Nougit Application Running at port 8080');
 	});
 	
 	

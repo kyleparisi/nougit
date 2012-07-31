@@ -1,5 +1,5 @@
 /*
-	Nougit - main.js
+	Nougit - loader.js
 	Author: Gordon Hall
 
 	Copyright (c) 2012 Gordon Hall
@@ -18,3 +18,14 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 	DEALINGS IN THE SOFTWARE.
 */
+
+var nougit = {};
+
+console.log('Loading scripts...');
+
+_.load([
+	'/scripts/api.js',
+	'/scripts/ui.js'
+], function() {
+	nougit.ui.init();
+});
