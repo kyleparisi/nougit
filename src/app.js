@@ -25,7 +25,7 @@
 	var config,
 	    fs = require('fs'),
 	    setup = require('./setup.js'),
-	    git = require('./nodegit.js'),
+	    git = require('./git.js'),
 	    express = require('express'),
 	    jade = require('jade'),
 	    db = require('mongojs'),
