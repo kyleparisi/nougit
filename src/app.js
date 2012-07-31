@@ -74,7 +74,7 @@
 	
 	
 	/*
-	 * Start Server
+	 * start server
 	 */
 
 	app.listen(8080, function() {
