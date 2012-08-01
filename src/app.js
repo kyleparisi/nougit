@@ -88,10 +88,24 @@
 	});
 
 	// get array of repository objects
-	app.get('/repos', function(req, res) {
-		nougit.getRepositories(function(data) {
+	app.get('/repositories', function(req, res) {
+		nougit.repositories(function(data) {
 			if (data['error']) {
 				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
+	// get commit log of repository
+	app.get('/history/:repo', function(req, res) {
+		var repo = config.repository_dir + '/' + req.param('repo');
+		git.history(repo, function(data) {
+			if (data['error']) {
+				res.writeHead(500);
 			} else {
 				res.writeHead(200);
 			}

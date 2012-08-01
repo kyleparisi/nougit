@@ -28,24 +28,29 @@ module.exports = (function() {
 	 * getRepositories() - public
 	 * retrieves repo list and passes it to callback
 	 */
-	function getRepositories(callback) {
+	function repositories(callback) {
 		var repos,
 		    config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 		if (fs.existsSync('./repos.json', 'utf8')) {
 			repos = fs.readFileSync('./repos.json', 'utf8');
-			callback.call(this, repos);
+			callback.call(this, JSON.parse(repos));
 		} else {
 			repos = [];
 			console.log(config['repository_dir']);
 			var repodir = fs.readdirSync(config['repository_dir']);
 			repodir.forEach(function(val, key) {
-				var repo = {
-					name : val,
-					desc : '',
-					date_added : new Date()
-				}
-				repos.push(repo);
+				// Query the entry
+				var stats = fs.lstatSync(config['repository_dir'] + '/' + val);
+			    // is it a directory
+				if (stats.isDirectory()) {
+					var repo = {
+						name : val,
+						desc : '',
+						date_added : new Date()
+					}
+					repos.push(repo);
+			    }
 			});
 			fs.writeFile('./repos.json', JSON.stringify(repos), function() {
 				callback.call(this, repos);
@@ -59,7 +64,7 @@ module.exports = (function() {
 	 */
 	
 	return {
-		getRepositories : getRepositories
+		repositories : repositories
 	};
 	
 })();

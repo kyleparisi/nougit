@@ -22,7 +22,8 @@
 module.exports = (function() {
 	// get required modules
 	var fs = require('fs'),
-	    exec = require('child_process').exec;
+	    exec = require('child_process').exec,
+	    back = __dirname;
 	
 	/*
 	 * repository() - private
@@ -54,6 +55,7 @@ module.exports = (function() {
 		} else {
 			return false;
 		}
+		process.chdir(back);
 	}
 	
 	/*
@@ -90,6 +92,7 @@ module.exports = (function() {
 					output += ']';
 					output = JSON.parse(output);
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, output);
 					}
 				}
@@ -149,6 +152,7 @@ module.exports = (function() {
 					if (err || stderr) {
 						console.log(err || stderr);
 						if (callback) {
+							process.chdir(back);
 							callback.call(this, {
 								error : err || stderr
 							});
@@ -159,6 +163,7 @@ module.exports = (function() {
 						fs.writeFile('README.md', readme_txt, function() {
 							// pass success object into callback
 							if (callback) {
+								process.chdir(back);
 								callback.call(this, {
 									success : stdout
 								});
@@ -267,12 +272,14 @@ module.exports = (function() {
 				if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							error : err || stderr
 						});
 					}
 				// all is good
 				} else if (stdout) {
+					process.chdir(back);
 					callback.call(this, parseStatus(stdout));
 				}
 			});
@@ -348,6 +355,7 @@ module.exports = (function() {
 					}
 					// if last in iteration pass output into callback
 					if (val === files[files.length - 1]) {
+						process.chdir(back);
 						callback.call(this, {
 							errors : errs,
 							added : succs
@@ -388,12 +396,14 @@ module.exports = (function() {
 				if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							error : err || stderr
 						});
 					}
 				// all is good
 				} else if (stdout) {
+					process.chdir(back);
 					callback.call(this, {
 						message : stdout
 					});
@@ -416,6 +426,7 @@ module.exports = (function() {
 				if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							error : err || stderr
 						});
@@ -437,6 +448,7 @@ module.exports = (function() {
 						}
 					});
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, tree);
 					}
 				}
@@ -458,6 +470,7 @@ module.exports = (function() {
 				if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							error : err || stderr
 						});
@@ -465,6 +478,7 @@ module.exports = (function() {
 				// all is good
 				} else {
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							message : 'Branch ' + branchname + ' created'
 						});
@@ -488,6 +502,7 @@ module.exports = (function() {
 				if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							error : err || stderr
 						});
@@ -495,6 +510,7 @@ module.exports = (function() {
 				// all is good
 				} else if (stdout) {
 					if (callback) {
+						process.chdir(back);
 						callback.call(this, {
 							message : stdout
 						});
