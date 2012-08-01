@@ -254,10 +254,74 @@ module.exports = (function() {
 		}
 	}
 	
+	/*
+	 * status() - public
+	 * executes git status and parses into object containing staged/unstaged files
+	 */
+	function status(path, callback) {
+		// move to repo
+		process.chdir(path);
+		// execute git status parse
+		exec('git status', function(err, stdout, stderr) {
+			// if error, pass error object into callback
+			if (err || stderr) {
+				console.log(err || stderr);
+				if (callback) {
+					callback.call(this, {
+						error : err || stderr
+					});
+				}
+			// all is good
+			} else if (stdout) {
+				callback.call(this, parseStatus(stdout));
+			}
+		});
+		// status parser
+		function parseStatus(data) {
+			// create status object
+			var status = {
+				staged : [],
+				not_staged : [],
+				untracked : []
+			},
+			// use this var to switch between arrays to push to
+			file_status = null,
+			// split output into array by line
+			output = data.split('\n');
+			// iterate over lines
+			output.forEach(function(line) {
+				// switch to staged array
+				if (line.toLowerCase().indexOf('changes to be committed') > -1) {
+					file_status = 'staged';
+				// or switch to not_staged array
+				} else if (line.toLowerCase().indexOf('changes not staged for commit') > -1) {
+					file_status = 'not_staged';
+				// or switch to untracked array
+				} else if (line.toLowerCase().indexOf('untracked files:') > -1) {
+					file_status = 'untracked';
+				}
+				// check if the line contains a keyword
+				if (line.indexOf('modified') > -1 ||
+				    line.indexOf('new file') > -1 ||
+				    line.indexOf('deleted') > -1) {
+					// then remove # and all whitespace and split at the colon
+					var fileinfo = line.substr(1).trim().split(':');
+					// push a new object into the current array
+					status[file_status].push({
+						file : fileinfo[1].trim(),
+						status : fileinfo[0]
+					});
+				}
+			});
+			return status;
+		}
+	}
+	
 	return {
 		history : history,
 		create : create,
-		destroy : destroy
+		destroy : destroy,
+		status : status
 	};
   
 })();

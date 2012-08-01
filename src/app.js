@@ -90,7 +90,11 @@
 	// get array of repository objects
 	app.get('/repos', function(req, res) {
 		nougit.getRepositories(function(data) {
-			res.writeHead(200);
+			if (JSON.parse(data['error'])) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
 			res.write(data);
 			res.end();
 		});
