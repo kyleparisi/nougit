@@ -86,6 +86,15 @@
 		var cookies = req.cookies;
 		res.render('index', { });
 	});
+
+	// get array of repository objects
+	app.get('/repos', function(req, res) {
+		nougit.getRepositories(function(data) {
+			res.writeHead(200);
+			res.write(data);
+			res.end();
+		});
+	});
 	
 	/*
 	 * start server

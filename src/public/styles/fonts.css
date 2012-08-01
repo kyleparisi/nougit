@@ -7,7 +7,7 @@
 */
 @font-face {
     font-family: Capriola;
-    src: url('/styles/fonts/Capriola-Regular');
+    src: url('/assets/fonts/Capriola/Capriola-Regular.ttf');
     font-weight: normal;
 }
 
@@ -15,7 +15,7 @@
 */
 @font-face {
     font-family: Lobster;
-    src: url('/styles/fonts/Lobster.ttf');
+    src: url('/assets/fonts/Lobster/Lobster.ttf');
     font-weight: normal;
 }
 
@@ -23,26 +23,26 @@
 */
 @font-face {
     font-family: UbuntuMono;
-    src: url('/styles/fonts/UbuntuMono-Regular');
+    src: url('/assets/fonts/Ubuntu_Mono/UbuntuMono-Regular');
     font-weight: normal;
 }
 
 @font-face {
     font-family: UbuntuMono;
-    src: url('/styles/fonts/UbuntuMono-Bold');
+    src: url('/assets/fonts/Ubuntu_Mono/UbuntuMono-Bold');
     font-weight: bold;
 }
 
 @font-face {
     font-family: UbuntuMono;
-    src: url('/styles/fonts/UbuntuMono-Italic');
+    src: url('/assets/fonts/Ubuntu_Mono/UbuntuMono-Italic');
     font-weight: normal;
 	font-style: italic;
 }
 
 @font-face {
     font-family: UbuntuMono;
-    src: url('/styles/fonts/UbuntuMono-BoldItalic');
+    src: url('/assets/fonts/Ubuntu_Mono/UbuntuMono-BoldItalic');
     font-weight: bold;
 	font-style: italic;
 }

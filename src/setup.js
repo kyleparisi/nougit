@@ -45,11 +45,15 @@ module.exports = (function() {
 	 */
 	function setup(callback) {
 		console.log('Running initial configuration...')
-		var user, 
+		var user,
 		    email, 
 		    git_version, 
 		    node_version = process.versions['node'], 
-		    repository_dir = '/nougit';
+		    repository_dir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] + '/NougitRepositories';
+						
+		if (!fs.existsSync(repository_dir)) {
+			fs.mkdirSync(repository_dir);
+		}
 		
 		exec('git config --global user.name', function(err, stdout, stderr) {
 			if (err || stderr) {

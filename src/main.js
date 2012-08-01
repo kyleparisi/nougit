@@ -21,21 +21,44 @@
 
 module.exports = (function() {
 	
-	// get user configs
-	var config;
-	setup.init(function(data) {
-		config = data;
-	});
-	
-	
+	// get modules
+	var fs = require('fs');
+		
 	/*
-	 * getRepositories()
+	 * getRepositories() - public
 	 * retrieves repo list and passes it to callback
 	 */
 	function getRepositories(callback) {
-		
+		var repos,
+		    config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+
+		if (fs.existsSync('./repos.json', 'utf8')) {
+			repos = fs.readFileSync('./repos.json', 'utf8');
+			callback.call(this, repos);
+		} else {
+			repos = [];
+			console.log(config['repository_dir']);
+			var repodir = fs.readdirSync(config['repository_dir']);
+			repodir.forEach(function(val, key) {
+				var repo = {
+					name : val,
+					desc : '',
+					date_added : new Date()
+				}
+				repos.push(repo);
+			});
+			fs.writeFileSync('./repos.json', JSON.stringify(repos));
+			callback.call(this, repos);
+		}
 	}
 	
-	return {};
+	/*
+	 * getRepositories() - public
+	 * retrieves repo list and passes it to callback
+	 */
+	
+	return {
+		getRepositories : getRepositories
+	};
 	
 })();
