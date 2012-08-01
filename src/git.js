@@ -1,5 +1,5 @@
 /*
-	Nougit - nodegit.js
+	Nougit - git.js
 	Author: Gordon Hall
 
 	Copyright (c) 2012 Gordon Hall
