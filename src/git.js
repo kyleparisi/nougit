@@ -260,22 +260,27 @@ module.exports = (function() {
 	 */
 	function status(path, callback) {
 		// move to repo
-		process.chdir(path);
-		// execute git status parse
-		exec('git status', function(err, stdout, stderr) {
-			// if error, pass error object into callback
-			if (err || stderr) {
-				console.log(err || stderr);
-				if (callback) {
-					callback.call(this, {
-						error : err || stderr
-					});
+		if (repository(path)) {
+			// execute git status parse
+			exec('git status', function(err, stdout, stderr) {
+				// if error, pass error object into callback
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else if (stdout) {
+					callback.call(this, parseStatus(stdout));
 				}
-			// all is good
-			} else if (stdout) {
-				callback.call(this, parseStatus(stdout));
-			}
-		});
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
 		// status parser
 		function parseStatus(data) {
 			// create status object
@@ -317,11 +322,203 @@ module.exports = (function() {
 		}
 	}
 	
+	/*
+	 * stage() - private
+	 * adds or removes the array of files in the specified repository for commit
+	 */
+	function stage(operation, path, files, callback) {
+		// move to repo
+		if (repository(path)) {
+			// store any errors
+			var errs = [],
+			    succs = [];
+			// iterate over files
+			files.forEach(function(val,key) {
+				// execute git add for file
+				exec('git ' + operation + ' ' + val, function(err, stdout, stderr) {
+					// if error, push message into errs
+					if (err || stderr) {
+						errs.push(err || {
+							file : val,
+							error : stderr
+						});
+					// all is good
+					} else {
+						succs.push(val);
+					}
+					// if last in iteration pass output into callback
+					if (val === files[files.length - 1]) {
+						callback.call(this, {
+							errors : errs,
+							added : succs
+						});
+					}
+				});
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
+	/*
+	 * add() - public
+	 * adds the array of files in the specified repository for commit
+	 */
+	function add(path, files, callback) {
+		stage('add', path, files, callback);
+	}
+	
+	/*
+	 * remove() - public
+	 * removes the array of files in the specified repository for commit
+	 */
+	function remove(path, files, callback) {
+		stage('rm', path, files, callback);
+	}
+	
+	/*
+	 * commit() - public
+	 * commits the current staged files to the working branch
+	 */
+	function commit(path, message, callback) {
+		if (repository(path)) {
+			exec('git commit -m + "' + message + '"', function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else if (stdout) {
+					callback.call(this, {
+						message : stdout
+					});
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
+	/*
+	 * tree() - public
+	 * gets the current branch that HEAD points to and passes to callback
+	 */
+	function tree(path, callback) {
+		if (repository(path)) {
+			exec('git branch', function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else if (stdout) {
+					var tree = {
+						current : null,
+						others : []
+					},
+					branches = stdout.split('\n');
+					branches.forEach(function(val, key) {
+						if (val.indexOf('*') > -1) {
+							tree['current'] = val.replace('*', '').trim();
+						} else {
+							if (val) {
+								tree['others'].push(val.trim());
+							}
+						}
+					});
+					if (callback) {
+						callback.call(this, tree);
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
+	/*
+	 * branch() - public
+	 * creates a new branch for the specified repository
+	 */
+	function branch(path, branchname, callback) {
+		if (repository(path)) {
+			exec('git branch "' + branchname + '"', function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else {
+					if (callback) {
+						callback.call(this, {
+							message : 'Branch ' + branchname + ' created'
+						});
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
+	/*
+	 * checkout() - public
+	 * performs git checkout for the specified branch
+	 */
+	function checkout(path, branch, callback) {
+		if (repository(path)) {
+			exec('git checkout ' + branch, function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else if (stdout) {
+					if (callback) {
+						callback.call(this, {
+							message : stdout
+						});
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
 	return {
 		history : history,
 		create : create,
 		destroy : destroy,
-		status : status
+		status : status,
+		add : add,
+		remove : remove,
+		commit : commit,
+		tree : tree,
+		branch : branch,
+		checkout : checkout
 	};
   
 })();
