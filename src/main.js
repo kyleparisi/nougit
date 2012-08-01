@@ -47,8 +47,9 @@ module.exports = (function() {
 				}
 				repos.push(repo);
 			});
-			fs.writeFileSync('./repos.json', JSON.stringify(repos));
-			callback.call(this, repos);
+			fs.writeFile('./repos.json', JSON.stringify(repos), function() {
+				callback.call(this, repos);
+			});
 		}
 	}
 	
