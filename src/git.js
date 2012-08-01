@@ -302,7 +302,7 @@ module.exports = (function() {
 				} else if (line.toLowerCase().indexOf('changes not staged for commit') > -1) {
 					file_status = 'not_staged';
 				// or switch to untracked array
-				} else if (line.toLowerCase().indexOf('untracked files:') > -1) {
+				} else if (line.toLowerCase().indexOf('untracked files') > -1) {
 					file_status = 'untracked';
 				}
 				// check if the line contains a keyword
