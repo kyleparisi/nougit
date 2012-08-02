@@ -20,7 +20,10 @@
 */
 
 var nougit = {
-	current_repo : null
+	repos : {
+		all : [],
+		current : null
+	}
 };
 
 console.log('Loading scripts...');

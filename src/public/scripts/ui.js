@@ -63,6 +63,7 @@ nougit['ui'] = (function() {
 	
 	function loadRepos() {
 		nougit.api.get('/repositories', function(data) {
+			nougit.repos.all = data;
 			var repolist = _.dom.get('.list', _.dom.get('#repositories'))[0];
 			repolist.innerHTML = '';
 			if (data.length) {
@@ -71,7 +72,16 @@ nougit['ui'] = (function() {
 					_.each(data, function() {
 						repolist.innerHTML += neckbeard.compile(temp, this);
 					});
-					// bind events here
+					_.each(_.dom.get('.repo'), function() {
+						_.bind(this, 'click', function() {
+							_.each(_.dom.get('.repo'), function() {
+								_.dom.deleteClass(_.dom.get('a', this)[0], 'active');
+							})
+							_.dom.insertClass(_.dom.get('a', this)[0], 'active');
+							nougit.repos.current = nougit.repos.all[_.dom.whichChild(this) - 1];
+							// use current repo to load commit data
+						})
+					});
 				});
 			} else {
 				neckbeard.get('no_repos', function(temp) {
