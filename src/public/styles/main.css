@@ -3,16 +3,157 @@
  * Author: Gordon Hall
  */
 
+/*
+Colors:
+	Red:
+		- background : #6d0019 #8f0222 #a90329
+		- color : #6d0019
+	Black:
+		- background : #0e0e0e #636363
+		- color : #0e0e0e
+	Shiny White : 
+		- background : #ffffff #f3f3f3 #ededed #ffffff
+*/
+
 body {
 	margin: 0;
 	padding: 0;
-	font-family: 'Capriola', Helvetica, sans-serif;
+	font-family: 'Karla', Helvetica, sans-serif;
+	background: url('/assets/images/bg.png') top left repeat #f2f2f2;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
 	font-family: 'Lobster', Helvetica, sans-serif;
 }
 
 .code {
 	font-family: 'UbuntuMono', Monaco, monospace;
+}
+
+h2, h3, h4 {
+	font-family: 'Karla', Helvetica, sans-serif;
+	color: #6d0019;
+	background: #f9f9f9;
+	text-shadow: 0 1px 0 #fff;
+	font-weight: normal;
+}
+
+/* Header, Footer, and Logo
+*/
+
+#header,
+#footer {
+	background: #636363; 
+	background: -webkit-linear-gradient(top, #636363 0%,#0e0e0e 100%);
+	border-bottom: 1px solid #636363;
+	position: fixed;
+	width: 100%;
+	z-index: 9979;
+}
+
+#header {
+	top: 0;
+	left: 0;
+	height: 24px;
+	padding: 12px;
+}
+
+#footer {
+	bottom: 0;
+	left: 0;
+	padding: 6px 12px;
+	height: 36px;
+}
+
+h1#logo {
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%); 
+	color: #fff;
+	text-shadow: 0 1px 0 #a90329;
+	border: 1px solid #a90329;
+	font-size: 26px;
+	padding: 7px 12px 7px 64px;
+	margin: 0 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9981;
+	width: 242px;
+}
+
+/* Sidebar
+*/
+
+#sidebar {
+	width: 320px;
+	background: #ffffff;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	z-index: 9980;
+	border-right: 1px solid #636363;
+}
+
+/*#sidebar::-webkit-scrollbar {
+	z-index: 9999;
+}*/
+
+#sidebar h2 {
+	font-size: 24px;
+	margin: 59px 0 0 0;
+	padding: 12px;
+}
+
+#repositories {
+	margin: 49px 0 48px 0;
+}
+
+#repositories ul.list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#repositories ul.list li {
+	font-size: 18px;
+}
+
+#repositories ul.list a {
+	color: #0e0e0e;
+	text-decoration: none;
+	display: block;
+	padding: 12px 24px;
+}
+
+#repositories ul.list a:hover,
+#repositories ul.list a.active {
+	color: #6d0019;
+	background-color: #f9f9f9;
+	box-shadow: 0 0px 8px rgba(0,0,0,0.5);
+}
+
+#options {
+	position: fixed;
+	border: 1px solid #a90329;
+	left: 0;
+	bottom: 0;
+	padding: 6px 12px;
+	height: 35px;
+	width: 294px;
+	z-index: 9981;
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+}
+
+/* Content
+*/
+
+#content {
+	padding: 12px;
+	margin: 76px 24px 63px 344px;
+	background: #fff;
+	border: 1px solid #ccc;
 }

@@ -19,7 +19,9 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-var nougit = {};
+var nougit = {
+	current_repo : null
+};
 
 console.log('Loading scripts...');
 
@@ -28,6 +30,7 @@ if (!JSON) {
 }
 
 _.load([
+	'/scripts/neckbeard.js',
 	'/scripts/api.js',
 	'/scripts/ui.js'
 ], function() {

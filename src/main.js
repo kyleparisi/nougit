@@ -24,10 +24,20 @@ module.exports = (function() {
 	// get modules
 	var fs = require('fs'),
 	    repos,
-	    config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+	    config;
+	
+	/*
+	 * updateConfig() - private
+	 * checks if config exists and updates the variable with it's contents
+	 */
+	function updateConfig() {
+		if (fs.existsSync('./config.json')) {
+			config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+		}
+	}
 		
 	/*
-	 * getRepositories() - public
+	 * repositories() - public
 	 * retrieves repo list and passes it to callback
 	 */
 	function repositories(callback) {
@@ -40,12 +50,12 @@ module.exports = (function() {
 	}
 	
 	/*
-	 * getRepositories() - public
-	 * retrieves repo list and passes it to callback
+	 * generatefile() - public
+	 * generates repos.json file
 	 */
 	function generatefile(callback) {	
 		repos = [];
-		console.log(config['repository_dir']);
+		updateConfig();
 		var repodir = fs.readdirSync(config['repository_dir']);
 		repodir.forEach(function(val, key) {
 			// Query the entry

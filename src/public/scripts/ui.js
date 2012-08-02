@@ -19,7 +19,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-nougit['ui'] = (function() {
+nougit['ui'] = (function() {	
+	
 	// init vars
 	var actions = _.dom.get('.action'),
 	    dialogs = {},
@@ -57,6 +58,33 @@ nougit['ui'] = (function() {
 	function init() {
 		// initialize
 		console.log('Nougit Ready!');
+		loadRepos();
+	}
+	
+	function loadRepos() {
+		nougit.api.get('/repositories', function(data) {
+			var repolist = _.dom.get('.list', _.dom.get('#repositories'))[0];
+			repolist.innerHTML = '';
+			if (data.length) {
+				// get neckbeard template
+				neckbeard.get('list_repo', function(temp) {
+					_.each(data, function() {
+						repolist.innerHTML += neckbeard.compile(temp, this);
+					});
+					// bind events here
+				});
+			} else {
+				neckbeard.get('no_repos', function(temp) {
+					repolist.innerHTML += neckbeard.compile(temp, {});
+				});
+			}
+		}, function(err) {
+			
+		});
+	}
+	
+	function uialert(message) {
+		
 	}
 	
 	//
@@ -65,7 +93,8 @@ nougit['ui'] = (function() {
 		init : init,
 		dialogs : dialogs,
 		showDialog : showDialog,
-		hideDialog : hideDialog
+		hideDialog : hideDialog,
+		alert : uialert
 	};
 	
 })();
