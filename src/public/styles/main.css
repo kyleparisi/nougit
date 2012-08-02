@@ -22,7 +22,7 @@ body {
 	background: url('/assets/images/bg.png') top left repeat #f2f2f2;
 }
 
-h1 {
+h1, h2 {
 	font-family: 'Lobster', Helvetica, sans-serif;
 }
 
@@ -30,7 +30,7 @@ h1 {
 	font-family: 'UbuntuMono', Monaco, monospace;
 }
 
-h2, h3, h4 {
+h3, h4 {
 	font-family: 'Karla', Helvetica, sans-serif;
 	color: #6d0019;
 	background: #f9f9f9;
@@ -54,8 +54,26 @@ h2, h3, h4 {
 #header {
 	top: 0;
 	left: 0;
-	height: 24px;
-	padding: 12px;
+	overflow: hidden;
+	border-bottom: 1px solid #636363;
+	border-top: 1px solid #636363;
+}
+
+h2#current {
+	float: left;
+	margin: 7px 12px 7px 356px;
+	color: #ffffff;
+	font-size: 26px;
+	text-shadow: 0 1px 0 #0e0e0e;
+}
+
+#navigation {
+	float: right;
+}
+
+#navigation ul {
+	margin: 0;
+	padding: 0;
 }
 
 #footer {
@@ -63,22 +81,6 @@ h2, h3, h4 {
 	left: 0;
 	padding: 6px 12px;
 	height: 36px;
-}
-
-h1#logo {
-	background: #a90329; 
-	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%); 
-	color: #fff;
-	text-shadow: 0 1px 0 #a90329;
-	border: 1px solid #a90329;
-	font-size: 26px;
-	padding: 7px 12px 7px 64px;
-	margin: 0 0;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 9981;
-	width: 242px;
 }
 
 /* Sidebar
@@ -97,11 +99,27 @@ h1#logo {
 	border-right: 1px solid #636363;
 }
 
+#sidebar h2 {
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%); 
+	color: #fff;
+	text-shadow: 0 1px 0 #a90329;
+	border: 1px solid #a90329;
+	font-size: 26px;
+	padding: 7px 12px 7px 36px;
+	margin: 0 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9981;
+	width: 270px;
+}
+
 /*#sidebar::-webkit-scrollbar {
 	z-index: 9999;
 }*/
 
-#sidebar h2 {
+#sidebar h3 {
 	font-size: 24px;
 	margin: 59px 0 0 0;
 	padding: 12px;
