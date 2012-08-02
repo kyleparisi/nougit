@@ -20,14 +20,52 @@
 */
 
 nougit['ui'] = (function() {
-		
+	// init vars
+	var actions = _.dom.get('.action'),
+	    dialogs = {},
+	    overlay = _.dom.get('#dialogs');
+	
+	// bind hiding logic to overlay
+	_.bind(overlay, 'click', function() {
+		_.each(dialogs, function(key, val) {
+			if (_.dom.hasClass(val, 'visible')) {
+				nougit.ui.hideDialog(key);
+			}
+		});
+	});
+	
+	// bind view logic to dialogs
+	_.each(actions, function() {
+		_.bind(this, 'click', function() {
+			var dialog = _.dom.get(this.href);
+			dialogs[this.href] = dialog;
+			nougit.ui.showDialog(this.href);
+		});
+	});
+	
+	
+	function showDialog(id) {
+		_.dom.insertClass(overlay, 'active');
+		_.dom.insertClass(_.dom.get(id), 'visible');
+	}
+	
+	function hideDialog(id) {
+		_.dom.deleteClass(overlay, 'active');
+		_.dom.deleteClass(_.dom.get(id), 'visible');
+	}
+	
 	function init() {
 		// initialize
 		console.log('Nougit Ready!');
-	}	
+	}
+	
+	//
 		
 	return {
-		init : init
+		init : init,
+		dialogs : dialogs,
+		showDialog : showDialog,
+		hideDialog : hideDialog
 	};
 	
 })();

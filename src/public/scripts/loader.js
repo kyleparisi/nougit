@@ -23,6 +23,10 @@ var nougit = {};
 
 console.log('Loading scripts...');
 
+if (!JSON) {
+	_.load(['/scripts/json2.js']);
+}
+
 _.load([
 	'/scripts/api.js',
 	'/scripts/ui.js'

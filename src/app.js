@@ -50,8 +50,8 @@
 
 		// methodOverride checks req.body.method for the HTTP method override
 		// bodyParser parses the request body and populates req.body
-		app.use(express.bodyParser());
 		app.use(express.methodOverride());
+		app.use(express.bodyParser());
 
 		// use cookie parser
 		app.use(express.cookieParser());
@@ -96,6 +96,39 @@
 				res.writeHead(200);
 			}
 			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
+	// create a new repository
+	app.post('/repositories/create', function(req, res) {
+		var name = req.body.name,
+		    description = req.body.description;
+		git.create(name, description, config['repository_dir'], function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			nougit.generatefile();
+			res.end();
+		}); 
+	});
+	
+	// get array of repository objects
+	app.delete('/repositories/destroy', function(req, res) {
+		var name = req.body.name,
+		    deletefiles = req.body.deletefiles;
+		
+		git.destroy(config['repository_dir'] + '/' + name, deletefiles, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			nougit.generatefile();
 			res.end();
 		});
 	});

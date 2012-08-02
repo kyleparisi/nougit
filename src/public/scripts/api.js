@@ -21,7 +21,44 @@
 
 nougit['api'] = (function() {
 	
+	// set the templated request function
+	function send(verb, endpoint, body, success, failure) {
+		_.request({
+			type : verb,
+			url : endpoint,
+			beforeSend : function(req) {
+				if (verb !== 'GET') {
+					req.setRequestHeader('Content-Type', 'application/json');
+				}
+			},
+			success : success,
+			failure : failure,
+			expect : 'json',
+			data : JSON.stringify(body)
+		});
+	}
 	
-	return {};
+	function post(endpoint, body, success, failure) {
+		send('POST', endpoint, body, success, failure);
+	}
+	
+	function get(endpoint, success, failure) {
+		send('GET', endpoint, '', success, failure);
+	}
+	
+	function put(endpoint, body, success, failure) {
+		send('PUT', endpoint, body, success, failure);
+	}
+	
+	function del(endpoint, body, success, failure) {
+		send('DELETE', endpoint, body, success, failure);
+	}
+	
+	return {
+		get : get,
+		post : post,
+		put : put,
+		del : del
+	};
 	
 })();

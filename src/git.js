@@ -117,24 +117,30 @@ module.exports = (function() {
 			var repos = fs.readdirSync(path),
 			// create initial readme text
 			    readme_txt = '# ' + name + '\n\n' + description;
-			// iterate over items
-			for (var repo = 0; repo < repos.length; repo++) {
-				// does the repo already exist
-				if (repos[repo] === name) {
-					// pass error object into callback
-					if (callback) {
-						callback.call(this, {
-							error : 'Directory already exists'
-						});
-					}
-				// doesnt exist
-				} else {
-					// last in iteration
-					if (repo === repos.length - 1) {
-						// call ready()
-						ready();
+			// if the dir is not empty
+			if (repos.length) {
+				// iterate over items
+				for (var repo = 0; repo < repos.length; repo++) {
+					// does the repo already exist
+					if (repos[repo] === name) {
+						// pass error object into callback
+						if (callback) {
+							callback.call(this, {
+								error : 'Directory already exists'
+							});
+						}
+					// doesnt exist
+					} else {
+						// last in iteration
+						if (repo === repos.length - 1) {
+							// call ready()
+							ready();
+						}
 					}
 				}
+			// otherwise go ahead
+			} else {
+				ready();
 			}
 			// called if all is good in the hood
 			function ready() {
