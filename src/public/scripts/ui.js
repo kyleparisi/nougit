@@ -24,15 +24,18 @@ nougit['ui'] = (function() {
 	// init vars
 	var actions = _.dom.get('.action'),
 	    dialogs = {},
-	    overlay = _.dom.get('#dialogs');
+	    overlay = _.dom.get('#dialogs'),
+	    navigation = _.dom.get('.navaction');
 	
 	// bind hiding logic to overlay
-	_.bind(overlay, 'click', function() {
-		_.each(dialogs, function(key, val) {
-			if (_.dom.hasClass(val, 'visible')) {
-				nougit.ui.hideDialog(key);
-			}
-		});
+	_.bind(overlay, 'click', function(event) {
+		if (event.target === this) {
+			_.each(dialogs, function(key, val) {
+				if (_.dom.hasClass(val, 'visible')) {
+					nougit.ui.hideDialog(key);
+				}
+			});
+		}
 	});
 	
 	// bind view logic to dialogs
@@ -44,14 +47,41 @@ nougit['ui'] = (function() {
 		});
 	});
 	
+	// bind logic to navigation
+	_.each(navigation, function() {
+		_.bind(this, 'click', function() {
+			_.each(navigation, function() {
+				_.dom.deleteClass(this, 'active');
+			});
+			_.dom.insertClass(this, 'active');
+			// content viewing logic
+		});
+	});
+	
+	// bind logic to cancel buttons
+	_.each(_.dom.get('.cancel'), function() {
+		_.bind(this, 'click', function() {
+			var current = _.dom.get('.visible', _.dom.get('#dialogs'))[0];
+			hideDialog('#' + current.id);
+		});
+	});
+	
+	// bind save repo
+	_.bind(_.dom.get('#save_repo'), 'click', function() {
+		newRepository(_.dom.parseForm(_.dom.get('#new_repo')));
+	});
 	
 	function showDialog(id) {
-		_.dom.insertClass(overlay, 'active');
-		_.dom.insertClass(_.dom.get(id), 'visible');
+		if (!_.dom.hasClass(_.dom.get(id), 'visible')) {
+			_.dom.insertClass(overlay, 'active');
+			_.dom.deleteClass(overlay, 'inactive');
+			_.dom.insertClass(_.dom.get(id), 'visible');
+		}
 	}
 	
 	function hideDialog(id) {
 		_.dom.deleteClass(overlay, 'active');
+		_.dom.insertClass(overlay, 'inactive');
 		_.dom.deleteClass(_.dom.get(id), 'visible');
 	}
 	
@@ -76,11 +106,11 @@ nougit['ui'] = (function() {
 						_.bind(this, 'click', function() {
 							_.each(_.dom.get('.repo'), function() {
 								_.dom.deleteClass(_.dom.get('a', this)[0], 'active');
-							})
+							});
 							_.dom.insertClass(_.dom.get('a', this)[0], 'active');
 							nougit.repos.current = nougit.repos.all[_.dom.whichChild(this) - 1];
 							// use current repo to load commit data
-						})
+						});
 					});
 				});
 			} else {
@@ -93,8 +123,32 @@ nougit['ui'] = (function() {
 		});
 	}
 	
+	function newRepository(obj) {
+		nougit.api.post('/repositories/create', obj, 
+		function(data) {
+			if (data.success) {
+				uialert(data.success);
+				hideDialog('#addRepo');
+				loadRepos();
+			}
+		}, function(err) {
+			uialert(err['error']);
+		});
+	}
+	
 	function uialert(message) {
-		
+		console.log(message);
+	}
+	
+	function toggleFooter() {
+		var footer = _.dom.get('#footer');
+		if (_.dom.hasClass(footer, 'active')) {
+			_.dom.deleteClass(footer, 'active');
+			_.dom.insertClass(footer, 'inactive');
+		} else {
+			_.dom.insertClass(footer, 'active');
+			_.dom.deleteClass(footer, 'inactive');
+		}
 	}
 	
 	//
@@ -104,7 +158,8 @@ nougit['ui'] = (function() {
 		dialogs : dialogs,
 		showDialog : showDialog,
 		hideDialog : hideDialog,
-		alert : uialert
+		alert : uialert,
+		toggleFooter : toggleFooter
 	};
 	
 })();

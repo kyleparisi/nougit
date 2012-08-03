@@ -23,7 +23,8 @@ module.exports = (function() {
 	
 	var fs = require('fs'),
 	    exec = require('child_process').exec,
-	    config;
+	    config,
+	    home_dir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 	
 	/*
 	 * complete() - private
@@ -49,7 +50,7 @@ module.exports = (function() {
 		    email, 
 		    git_version, 
 		    node_version = process.versions['node'], 
-		    repository_dir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] + '/NougitRepositories';
+		    repository_dir = process.cwd() + '/public/repositories';
 						
 		if (!fs.existsSync(repository_dir)) {
 			fs.mkdirSync(repository_dir);

@@ -38,6 +38,56 @@ h3, h4 {
 	font-weight: normal;
 }
 
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+/* Button Styles
+*/
+
+.button {
+	background-size: 24px 24px;
+	background-color: #d6d6d6;
+	border: 1px solid #f6f6f6;
+	border-bottom: 1px solid #c1c1c1;
+	display: inline-block;
+	font-size: 16px;
+	color: #333;
+	padding: 8px 8px 8px 40px;
+	border-radius: 2px;
+	background-position: 8px 50%;
+	background-repeat: no-repeat;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.button:hover {
+	background-color: #c1c1c1;
+}
+
+.button:active {
+	border: 1px solid #ccc;
+	border-bottom: 1px solid #fefefe;
+}
+
+.plus {
+	background-image: url('/assets/images/icons/file_plus.png');
+}
+
+.gear {
+	background-image: url('/assets/images/icons/engine.png');
+}
+
+.save {
+	background-image: url('/assets/images/icons/save.png');
+}
+
+.cancel {
+	background-image: url('/assets/images/icons/cancel.png');
+}
+
 /* Header, Footer, and Logo
 */
 
@@ -73,14 +123,76 @@ h2#current {
 
 #navigation ul {
 	margin: 0;
-	padding: 0;
+	padding: 4px 12px;
 }
 
 #footer {
-	bottom: 0;
+	bottom: -51px;
 	left: 0;
 	padding: 6px 12px;
-	height: 36px;
+	height: 38px;
+}
+
+#footer.inactive {
+	bottom: -51px;
+	-webkit-animation: hideFooter 0.2s;
+}
+
+#footer.active {
+	bottom: 0px;
+	-webkit-animation: showFooter 0.2s;
+}
+
+@-webkit-keyframes showFooter {
+	from {
+		bottom: -51px;
+	}
+	to {
+		bottom: 0px;
+	}
+}
+
+@-webkit-keyframes hideFooter {
+	from {
+		bottom: 0px;
+	}
+	to {
+		bottom: -51px;
+	}
+}
+
+#footer ul {
+	margin: 3px 12px 3px -155px;
+	border: 1px solid #101010;
+	border-right: none;
+	display: inline-block;
+	position: relative;
+	left: 50%;
+}
+
+#footer ul li {
+	display: inline-block;
+	width: 120px;
+	text-align: center;
+	border-left: 1px solid #333;
+}
+
+#footer ul li a {
+	display: block;
+	padding: 6px 12px;
+	color: #ffffff;
+	text-decoration: none;
+	border-right: 1px solid #000;
+}
+
+#footer ul li a:hover {
+	background-color: rgba(0,0,0,0.1);
+}
+
+#footer ul li a:active,
+#footer ul li a.active {
+	background: #0e0e0e; 
+	background: -webkit-linear-gradient(top, #0e0e0e 0%,#636363 100%);
 }
 
 /* Sidebar
@@ -156,14 +268,25 @@ h2#current {
 #options {
 	position: fixed;
 	border: 1px solid #a90329;
+	text-align: center;
 	left: 0;
 	bottom: 0;
 	padding: 6px 12px;
-	height: 35px;
+	height: 37px;
 	width: 294px;
 	z-index: 9981;
 	background: #a90329; 
 	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+}
+
+.no_repos {
+	margin: 24px;
+	padding: 12px;
+	text-align: center;
+	background-color: #F1F1F1;
+	border-radius: 6px;
+	position: relative;
+	top: 24px;
 }
 
 /* Content
@@ -174,4 +297,118 @@ h2#current {
 	margin: 76px 24px 63px 344px;
 	background: #fff;
 	border: 1px solid #ccc;
+}
+
+/* Dialogs
+*/
+
+#dialogs {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height:100%;
+	background-color: rgba(0,0,0,0.2);
+	z-index: 9981;
+	opacity: 0;
+}
+
+#dialogs.active {
+	display: block;
+	opacity: 1;
+	-webkit-animation: showOverlay 0.2s;
+}
+
+#dialogs.inactive {
+	display: none;
+	opacity: 0;
+}
+
+@-webkit-keyframes showOverlay {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.dialog {
+	position: absolute;
+	background: #ffffff;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.6);
+	top: 50%;
+	left: 50%;
+	-webkit-transform: scale(0.3);
+}
+
+.dialog.visible {
+	-webkit-transform: scale(1);
+	-webkit-animation: showDialog 0.2s;
+}
+
+@-webkit-keyframes showDialog {
+	from {
+		-webkit-transform: scale(0.3);
+	}
+	to {
+		-webkit-transform: scale(1);
+	}
+}
+
+.dialog h2 {
+	margin: 0 0 12px 0;
+	color: #ffffff;
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+	text-shadow: 0 1px 0 #a90329;
+	border: 1px solid #a90329;
+	font-size: 26px;
+	padding: 7px 12px;
+}
+
+.dialog form {
+	margin: 12px;
+}
+
+.dialog form label {
+	display: block;
+	background: #636363; 
+	background: -webkit-linear-gradient(top, #636363 0%,#0e0e0e 100%);
+	border-radius: 3px 3px 0 0;
+	color: #fff;
+	padding: 4px 12px;
+	width: 320px;
+}
+
+.dialog form input {
+	border: 1px solid #0e0e0e;
+	border-top: none;
+	border-radius: 0 0 3px 3px;
+	padding: 8px 12px;
+	background-color: #f1f1f1;
+	font-size: 14px;
+	margin: 0 0 12px 0;
+	width: 318px;
+}
+
+.dialog form input:focus {
+	background-color: #ffffff;
+	outline: none;
+}
+
+.dialog .options {
+	text-align: right;
+	padding: 12px;
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+}
+
+.dialog .options .button {
+	margin-left: 12px;
+}
+
+#addRepo {
+	margin: -138px 0 0 -184px;
 }

@@ -1,3 +1,4 @@
 /src/node_modules
 /src/config.json
 /src/repos.json
+/public/repositories

@@ -1,2 +1,11 @@
 div#dialogs
 	div#addRepo.dialog
+		h2 New Repository
+		form#new_repo
+			label(for='new_repo_name') Name
+			input(type='text', name='name', placeholder='MyNewRepository')
+			label(for='new_repo_description') Description
+			input(type='text', name='description', placeholder='An app that does something really cool...')
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#save_repo(href='#save') Save

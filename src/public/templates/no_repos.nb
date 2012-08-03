@@ -1,5 +1,3 @@
 <li class="no_repos">
-	You don't have any repositories. Why not create one?
-	<br />
-	<a href="#addRepo" class="button action">Add Repository</a>
+	You don't have any repositories.
 </li>
