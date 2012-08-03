@@ -130,6 +130,19 @@
 		}); 
 	});
 	
+	// get status of repository
+	app.get('/status/:repo', function(req, res) {
+		git.status(config['repository_dir'] + '/' + req.param('repo'), function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
 	// get array of repository objects
 	app.delete('/repositories/destroy', function(req, res) {
 		var name = req.body.name,

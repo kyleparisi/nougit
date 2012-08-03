@@ -215,6 +215,37 @@ nougit['ui'] = (function() {
 		'status' : function() {
 			current.innerHTML = 'Status';
 			content.innerHTML = '';
+			
+			nougit.api.get('/status/' + nougit.repos.current.name, function(data) {
+				neckbeard.get('status', function(temp) {
+					content.innerHTML = neckbeard.compile(temp, {});
+					var stagedList = _.dom.get('#staged_list'),
+					    notstagedList = _.dom.get('#notstaged_list'),
+					    untrackedList = _.dom.get('#untracked_list');
+					
+					_.each(data.staged, function() {
+						makeitem(this, stagedList);
+					});
+					
+					_.each(data.not_staged, function() {
+						makeitem(this, notstagedList);
+					});
+					
+					_.each(data.untracked, function() {
+						makeitem(this, untrackedList);
+					});
+					
+					function makeitem(text, appendto) {
+						var item = document.createElement('li');
+						item.className = 'status_file';
+						item.innerHTML = text;
+						appendto.appendChild(item);
+					}
+					
+				});
+			}, function(err) {
+				uialert(err, 'error');
+			});
 		},
 		
 		'source' : function() {

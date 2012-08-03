@@ -299,6 +299,49 @@ h2#current {
 	border: 1px solid #ccc;
 }
 
+/* Commit History
+*/
+
+.commit {
+	margin: 12px;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+	padding: 0 0 12px 0;
+	background-color: #f6f6f6;
+	border: 1px solid #a90329;
+}
+
+.commit .hash {
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+	color: #ffffff;
+	padding: 12px;
+}
+
+.commit .hash .code {
+	font-size: 14px;
+}
+
+.commit .story {
+	padding: 12px;
+}
+
+.commit .story a {
+	text-decoration: none;
+	color: #a90329;
+}
+
+.commit .story a:hover {
+	text-decoration: underline;
+}
+
+.commit .message {
+	padding: 12px 12px 12px 48px;
+	margin: 0 12px;
+	background: url('/assets/images/icons/comment.png') 12px 12px no-repeat #ffffff;
+	background-size: 24px 24px;
+	border-radius: 3px;
+}
+
 /* Dialogs
 */
 

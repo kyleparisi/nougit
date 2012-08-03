@@ -166,12 +166,11 @@ module.exports = (function() {
 					// all is good
 					} else if (stdout) {
 						// create readme file and place text inside
-						fs.writeFile('README.md', readme_txt, function() {
+						fs.writeFile(path + name + '/README.md', readme_txt, function() {
 							// pass success object into callback
 							var successMsg = stdout;
-							add('.', ['README.md'], function(output) {
+							add(path + name, ['README.md'], function(output) {
 								if (callback) {
-									process.chdir(back);
 									callback.call(this, {
 										success : successMsg
 									});
@@ -277,20 +276,23 @@ module.exports = (function() {
 		if (repository(path)) {
 			// execute git status parse
 			exec('git status', function(err, stdout, stderr) {
-				// if error, pass error object into callback
-				if (err || stderr) {
-					console.log(err || stderr);
-					if (callback) {
+				var status = stdout;
+				exec('git ls-files --other --exclude-standard', function(err, stdout, stderr) {
+					// if error, pass error object into callback
+					if (err || stderr) {
+						console.log(err || stderr);
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								error : err || stderr
+							});
+						}
+					// all is good
+					} else if (stdout) {
 						process.chdir(back);
-						callback.call(this, {
-							error : err || stderr
-						});
+						callback.call(this, parseStatus(status, stdout));
 					}
-				// all is good
-				} else if (stdout) {
-					process.chdir(back);
-					callback.call(this, parseStatus(stdout));
-				}
+				});
 			});
 		} else {
 			callback.call(this, {
@@ -298,17 +300,17 @@ module.exports = (function() {
 			});
 		}
 		// status parser
-		function parseStatus(data) {
+		function parseStatus(gitstatus, untracked) {
 			// create status object
 			var status = {
 				staged : [],
 				not_staged : [],
-				untracked : []
+				untracked : untracked.split('\n').slice(0, untracked.split('\n').length - 1)
 			},
 			// use this var to switch between arrays to push to
 			file_status = null,
 			// split output into array by line
-			output = data.split('\n');
+			output = gitstatus.split('\n');
 			// iterate over lines
 			output.forEach(function(line) {
 				// switch to staged array

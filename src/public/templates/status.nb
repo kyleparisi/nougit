@@ -1,0 +1,22 @@
+<div>
+	<h3>Commit Changes</h3>
+	<input type="text" placeholder="My commit message..." id="commit_message" />
+	<a href="#commit" id="commit" class="button save">Commit</a>
+</div>
+<div>
+	<h3>Staged For Commit</h3>
+	<ul id="staged_list"></ul>
+</div>
+
+<div>
+	<h3>Not Staged For Commit</h3>
+	<ul id="notstaged_list"></ul>
+</div>
+
+<div>
+	<h3>Untracked</h3>
+	<div class="options">
+		<a href="#stageselected">
+	</div>
+	<ul id="untracked_list"></ul>
+</div>

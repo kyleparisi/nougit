@@ -1,3 +1,7 @@
 <li class="repo">
-	<a href="#content" class="action content">#{name}</a>
+	<a href="#content" class="action content">
+		#{name}
+		<br/>
+		<span class="desc">#{desc}</span>
+	</a>
 </li>
