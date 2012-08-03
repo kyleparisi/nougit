@@ -374,18 +374,15 @@ h2#current {
 
 .dialog form label {
 	display: block;
-	background: #636363; 
-	background: -webkit-linear-gradient(top, #636363 0%,#0e0e0e 100%);
-	border-radius: 3px 3px 0 0;
-	color: #fff;
-	padding: 4px 12px;
-	width: 320px;
+	color: #0e0e0e;
+	padding: 4px 12px 4px 0;
+	width: 100px;
+	margin: 0;
+	position: relative;
 }
 
 .dialog form input {
 	border: 1px solid #0e0e0e;
-	border-top: none;
-	border-radius: 0 0 3px 3px;
 	padding: 8px 12px;
 	background-color: #f1f1f1;
 	font-size: 14px;
@@ -401,8 +398,8 @@ h2#current {
 .dialog .options {
 	text-align: right;
 	padding: 12px;
-	background: #a90329; 
-	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+	background: #636363; 
+	background: -webkit-linear-gradient(top, #636363 0%,#0e0e0e 100%);
 }
 
 .dialog .options .button {
@@ -411,4 +408,37 @@ h2#current {
 
 #addRepo {
 	margin: -138px 0 0 -184px;
+}
+
+
+#alert {
+	position: fixed;
+	padding: 18px;
+	z-index: 9982;
+	bottom: 24px;
+	left: 50%;
+	width: 290px;
+	word-wrap: break-word;
+	font-size: 16px;
+	color: #333;
+	margin-left: -160px;
+	background-color: #ffffff;
+	border-left: 4px solid #333;
+	box-shadow: 0 0 15px rgba(0,0,0,0.6);
+	font-style: italic;
+	font-weight: bold;
+	display: none;
+	opacity: 0;
+}
+
+#alert.success {
+	border-left: 4px solid #299a0b;
+	padding-left: 48px;
+	background: url('/assets/images/icons/success.png') 12px center no-repeat #ffffff;
+}
+
+#alert.error {
+	border-left: 4px solid #a90329;
+	padding-left: 48px;
+	background: url('/assets/images/icons/error.png') 12px center no-repeat #ffffff;
 }

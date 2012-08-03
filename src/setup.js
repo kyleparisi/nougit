@@ -21,6 +21,8 @@
 
 module.exports = (function() {
 	
+	var is_dev = true;
+	
 	var fs = require('fs'),
 	    exec = require('child_process').exec,
 	    config,
@@ -50,7 +52,7 @@ module.exports = (function() {
 		    email, 
 		    git_version, 
 		    node_version = process.versions['node'], 
-		    repository_dir = process.cwd() + '/public/repositories';
+		    repository_dir = (is_dev) ? process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] + '/nougitrepos' : process.cwd() + '/public/repositories';
 						
 		if (!fs.existsSync(repository_dir)) {
 			fs.mkdirSync(repository_dir);

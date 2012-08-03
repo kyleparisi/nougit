@@ -168,12 +168,15 @@ module.exports = (function() {
 						// create readme file and place text inside
 						fs.writeFile('README.md', readme_txt, function() {
 							// pass success object into callback
-							if (callback) {
-								process.chdir(back);
-								callback.call(this, {
-									success : stdout
-								});
-							}	
+							var successMsg = stdout;
+							add('.', ['README.md'], function(output) {
+								if (callback) {
+									process.chdir(back);
+									callback.call(this, {
+										success : successMsg
+									});
+								}
+							});	
 						});
 					}
 				});
@@ -398,7 +401,7 @@ module.exports = (function() {
 	 */
 	function commit(path, message, callback) {
 		if (repository(path)) {
-			exec('git commit -m + "' + message + '"', function(err, stdout, stderr) {
+			exec('git commit -m ' + '"' + message + '"', function(err, stdout, stderr) {
 				if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {

@@ -25,7 +25,9 @@ nougit['ui'] = (function() {
 	var actions = _.dom.get('.action'),
 	    dialogs = {},
 	    overlay = _.dom.get('#dialogs'),
-	    navigation = _.dom.get('.navaction');
+	    navigation = _.dom.get('.navaction'),
+	    content = _.dom.get('#content'),
+	    current = _.dom.get('#current');	
 	
 	// bind hiding logic to overlay
 	_.bind(overlay, 'click', function(event) {
@@ -44,17 +46,6 @@ nougit['ui'] = (function() {
 			var dialog = _.dom.get(this.href);
 			dialogs[this.href] = dialog;
 			nougit.ui.showDialog(this.href);
-		});
-	});
-	
-	// bind logic to navigation
-	_.each(navigation, function() {
-		_.bind(this, 'click', function() {
-			_.each(navigation, function() {
-				_.dom.deleteClass(this, 'active');
-			});
-			_.dom.insertClass(this, 'active');
-			// content viewing logic
 		});
 	});
 	
@@ -110,6 +101,11 @@ nougit['ui'] = (function() {
 							_.dom.insertClass(_.dom.get('a', this)[0], 'active');
 							nougit.repos.current = nougit.repos.all[_.dom.whichChild(this) - 1];
 							// use current repo to load commit data
+							if (!_.dom.hasClass(_.dom.get('#footer'), 'active')) {
+								toggleFooter();
+							}
+							console.log(_.dom.get('a', _.dom.get('#footer'))[0]);
+							_.dom.get('a', _.dom.get('#footer'))[0].click();
 						});
 					});
 				});
@@ -127,17 +123,56 @@ nougit['ui'] = (function() {
 		nougit.api.post('/repositories/create', obj, 
 		function(data) {
 			if (data.success) {
-				uialert(data.success);
+				uialert(data.success, 'success');
 				hideDialog('#addRepo');
 				loadRepos();
+				
+				var inputs = _.dom.get('input', _.dom.get('#new_repo'));
+				_.each(inputs, function() {
+					this.value = '';
+				});
+				
+				nougit.api.post('/commit/' + obj.name, {
+					message : 'Initial Commit'
+				}, function(data) {
+
+				}, function(err) {
+					uialert(data.error, 'error')
+				});
+				
 			}
 		}, function(err) {
-			uialert(err['error']);
+			uialert(err['error'], 'error');
 		});
 	}
 	
-	function uialert(message) {
-		console.log(message);
+	function uialert(message, type) {
+		var alert_elm = _.dom.get('#alert');
+		alert_elm.innerHTML = message;
+		if (!type) {
+			_.dom.deleteClass(alert_elm, 'success');
+			_.dom.deleteClass(alert_elm, 'error');
+		} else {
+			if (type === 'success') {
+				_.dom.insertClass(alert_elm, 'success');
+				_.dom.deleteClass(alert_elm, 'error');
+			} else {
+				_.dom.deleteClass(alert_elm, 'success');
+				_.dom.insertClass(alert_elm, 'error');
+			}
+		}
+		alert_elm.style.display = 'block';
+		_.dom.animate(alert_elm, {
+			opacity : 1
+		}, 200, function() {
+			setTimeout(function() {
+				_.dom.animate(alert_elm, {
+					opacity : 0
+				}, 200, function() {
+					alert_elm.style.display = 'none';
+				});
+			}, 2000);
+		});
 	}
 	
 	function toggleFooter() {
@@ -151,7 +186,64 @@ nougit['ui'] = (function() {
 		}
 	}
 	
-	//
+	var repo_nav = {
+		'history' : function() {
+			current.innerHTML = 'History';
+			content.innerHTML = '';
+			
+			var commit_list = document.createElement('ul');
+			content.appendChild(commit_list);
+			
+			nougit.api.get('/history/' + nougit.repos.current.name, function(data) {
+				_.each(data, function() {
+					var commit = {
+						author : this.author.split(' <')[0],
+						email : this.author.split('<')[1].replace('>',''),
+						commit : this.commit,
+						message : this.message,
+						date : this.date
+					};
+					neckbeard.get('commits', function(temp) {
+						commit_list.innerHTML += neckbeard.compile(temp, commit);
+					});
+				});
+			}, function(err) {
+				uialert(err, 'error');
+			});
+		},
+		
+		'status' : function() {
+			current.innerHTML = 'Status';
+			content.innerHTML = '';
+		},
+		
+		'source' : function() {
+			current.innerHTML = 'Source';
+			content.innerHTML = '';
+		},
+		
+		'graphs' : function() {
+			current.innerHTML = 'Graphs';
+			content.innerHTML = '';
+		},
+		
+		'admin' : function() {
+			current.innerHTML = 'Admin';
+			content.innerHTML = '';
+		}
+	};
+	
+	// bind logic to navigation
+	_.each(navigation, function() {
+		_.bind(this, 'click', function(event) {
+			_.each(navigation, function() {
+				_.dom.deleteClass(this, 'active');
+			});
+			_.dom.insertClass(this, 'active');
+			// content viewing logic
+			repo_nav[this.href.split('#')[1]].call(this, event);
+		});
+	});
 		
 	return {
 		init : init,

@@ -116,6 +116,20 @@
 		}); 
 	});
 	
+	// commit to a repository
+	app.post('/commit/:repo', function(req, res) {
+		var msg = req.body.message;
+		git.commit(config['repository_dir'] + '/' + req.param('repo'), msg, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
 	// get array of repository objects
 	app.delete('/repositories/destroy', function(req, res) {
 		var name = req.body.name,
