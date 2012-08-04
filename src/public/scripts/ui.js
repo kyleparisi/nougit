@@ -62,6 +62,11 @@ nougit['ui'] = (function() {
 		newRepository(_.dom.parseForm(_.dom.get('#new_repo')));
 	});
 	
+	function reloadPanel() {
+		var current = _.dom.get('.active', _.dom.get('#footer'))[0];
+		current.click();
+	}
+	
 	function showDialog(id) {
 		if (!_.dom.hasClass(_.dom.get(id), 'visible')) {
 			_.dom.insertClass(overlay, 'active');
@@ -218,7 +223,7 @@ nougit['ui'] = (function() {
 			
 			nougit.api.get('/status/' + nougit.repos.current.name, function(data) {
 				neckbeard.get('status', function(temp) {
-					
+					console.log(data);
 					content.innerHTML = neckbeard.compile(temp, {});
 					var stagedList = _.dom.get('#staged_list'),
 					    notstagedList = _.dom.get('#notstaged_list'),
@@ -233,7 +238,11 @@ nougit['ui'] = (function() {
 					});
 					
 					_.each(data.untracked, function() {
-						makeitem(this, untrackedList);
+						var item = {
+							file : this,
+							status : 'untracked'
+						}
+						makeitem(item, untrackedList);
 					});
 					
 					bindfilelist();
@@ -256,12 +265,30 @@ nougit['ui'] = (function() {
 					function makeitem(text, appendto) {
 						var item = document.createElement('li');
 						item.className = 'status_file';
-						item.innerHTML = text;
+						item.innerHTML = text.file;
+						item.title = text.status;
 						appendto.appendChild(item);
 					}
 					
 					function commit(message) {
+						var staged = _.dom.get('#staged_list'),
+						    files = [];
+						_.each(staged.childNodes, function() {
+							files.push(this.innerHTML);
+						});
 						// call api here
+						nougit.api.post('/commit/' + nougit.repos.current.name, {
+							message : message
+						}, function(data) {
+							console.log(data.message);
+							uialert('Changes commited!', 'success');
+							var commitbutton = _.dom.get('a', _.dom.get('#footer'))[1];
+							commitbutton.click();
+						}, function(err) {
+							console.log(err);
+							uialert('Nothing to commit!', 'error');
+							reloadPanel();
+						});
 					}
 					
 					function stageSelected() {
@@ -276,7 +303,10 @@ nougit['ui'] = (function() {
 							_.dom.deleteClass(newfile, 'selected');
 							staged.appendChild(newfile);
 							this.parentNode.removeChild(this);
-							files.push(this.innerHTML);
+							files.push({
+								file : this.innerHTML,
+								status : this.title
+							});
 						});
 						
 						_.each(notstaged, function() {
@@ -285,12 +315,25 @@ nougit['ui'] = (function() {
 							_.dom.deleteClass(newfile, 'selected');
 							staged.appendChild(newfile);
 							this.parentNode.removeChild(this);
-							files.push(this.innerHTML);
+							files.push({
+								file : this.innerHTML,
+								status : this.title
+							});
 						});
-						
+
 						bindfilelist();
 						
 						// call api here
+						nougit.api.put('/stage/' + nougit.repos.current.name, {
+							files : files
+						}, function(data) {
+							console.log(data);
+							uialert('Files Staged!', 'success');
+							reloadPanel();
+						}, function(err) {
+							uialert(err.error);
+							reloadPanel();
+						});
 					}
 					
 					function stageAll() {
@@ -305,7 +348,10 @@ nougit['ui'] = (function() {
 							_.dom.deleteClass(newfile, 'selected');
 							staged.appendChild(newfile);
 							this.parentNode.removeChild(this);
-							files.push(this.innerHTML);
+							files.push({
+								file : this.innerHTML,
+								status : this.title
+							});
 						});
 						
 						_.each(notstaged, function() {
@@ -314,31 +360,57 @@ nougit['ui'] = (function() {
 							_.dom.deleteClass(newfile, 'selected');
 							staged.appendChild(newfile);
 							this.parentNode.removeChild(this);
-							files.push(this.innerHTML);
+							files.push({
+								file : this.innerHTML,
+								status : this.title
+							});
 						});
 						
 						bindfilelist();
 						
 						// call api here
+						nougit.api.put('/stage/' + nougit.repos.current.name, {
+							files : files
+						}, function(data) {
+							console.log(data);
+							uialert('Files staged!', 'success');
+							reloadPanel();
+						}, function(err) {
+							uialert(err);
+							reloadPanel();
+						});
 					}
 					
 					function unstageSelected() {
 						var selected = _.dom.get('.selected', _.dom.get('#staged_list')),
-						    notstaged = _.dom.get('#notstaged_list'),
+						    untracked = _.dom.get('#untracked_list'),
 							files = [];
 							
 						_.each(selected, function() {
-							files.push(this.innerHTML);
+							files.push({
+								file : this.innerHTML,
+								status : this.title
+							});
 							var newfile = this.cloneNode();
 							newfile.innerHTML = this.innerHTML;
 							_.dom.deleteClass(newfile, 'selected');
 							this.parentNode.removeChild(this);
-							notstaged.appendChild(newfile);
+							untracked.appendChild(newfile);
 						});
 						
 						bindfilelist();
 						
 						// call api here
+						nougit.api.put('/unstage/' + nougit.repos.current.name, {
+							files : files
+						}, function(data) {
+							console.log(data);
+							uialert('Files Unstaged!', 'success');
+							reloadPanel();
+						}, function(err) {
+							uialert(err);
+							reloadPanel();
+						});
 					}
 					
 					/* Status Bindings
@@ -353,6 +425,9 @@ nougit['ui'] = (function() {
 					_.bind(button.stageall, 'click', stageAll);
 					_.bind(button.stageselected, 'click', stageSelected);
 					_.bind(button.unstage, 'click', unstageSelected);
+					_.bind(button.commit, 'click', function() {
+						commit(_.dom.get('#commit_message').value);
+					});
 					
 					
 				});
@@ -366,8 +441,8 @@ nougit['ui'] = (function() {
 			content.innerHTML = '';
 		},
 		
-		'graphs' : function() {
-			current.innerHTML = 'Graphs';
+		'info' : function() {
+			current.innerHTML = 'Info';
 			content.innerHTML = '';
 		},
 		

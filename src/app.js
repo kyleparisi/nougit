@@ -33,6 +33,7 @@
 	    express = require('express'),
 	    jade = require('jade'),
 	    db = require('mongojs'),
+	    md = require("node-markdown").Markdown,
 	// create express server
 	    app = module.exports = express.createServer();
 
@@ -86,6 +87,28 @@
 		var cookies = req.cookies;
 		res.render('index', { });
 	});
+	
+	// get repository info
+	app.get('/repositories/info/:repo', function(req, res) {
+		var info = {},
+		    readme = md(fs.readFileSync(config['repository_dir'] + '/' + req.param('repo') + '/README.md', 'utf8')),
+		    url = config['repository_dir'] + '/' + req.param('repo') + '.git',
+		    branch = null;
+		
+		git.tree(config['repository_dir'] + '/' + req.param('repo'), function(data) {
+			branch = data;
+			if (data['error']) {
+				res.writeHead(500);
+			} else {
+				res.writeHead(200);
+			}
+			info.readme = readme;
+			info.url = url;
+			info.branches = branch;
+			res.write(JSON.stringify(info));
+			res.end();
+		});
+	});
 
 	// get array of repository objects
 	app.get('/repositories', function(req, res) {
@@ -120,6 +143,72 @@
 	app.post('/commit/:repo', function(req, res) {
 		var msg = req.body.message;
 		git.commit(config['repository_dir'] + '/' + req.param('repo'), msg, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
+	// commit to a repository
+	app.put('/stage/:repo', function(req, res) {
+		var files = req.body.files,
+		    add = [],
+		    rm = [];
+		
+		files.forEach(function(val, key) {
+			if (val.status === 'deleted') {
+				rm.push(val.file);
+			} else {
+				add.push(val.file);
+			}
+		});
+		
+		git.add(config['repository_dir'] + '/' + req.param('repo'), add, function(adddata) {
+			var staged = [],
+			    errs = [];
+			
+			if (adddata['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+				staged.concat(adddata.added);
+				errs.concat(adddata.errors);
+			}
+			console.log('Staged: ' + staged);
+			console.log('Errors: ' + errs);
+			git.remove(config['repository_dir'] + '/' + req.param('repo'), rm, function(rmdata) {
+				
+				if (!rmdata['error']) {
+					staged.concat(rmdata.added);
+					errs.concat(rmdata.errors);
+				}
+				
+				console.log('Staged: ' + staged);
+				console.log('Errors: ' + errs);
+				
+				res.write(JSON.stringify({
+					added : staged,
+					errors : errs
+				}));
+				res.end();
+			});
+		}); 
+	});
+	
+	// commit to a repository
+	app.put('/unstage/:repo', function(req, res) {
+		var files = req.body.files,
+		    rm = [];
+		
+		files.forEach(function(val, key) {
+			rm.push(val.file);
+		});
+		
+		git.unstage(config['repository_dir'] + '/' + req.param('repo'), rm, function(data) {
 			if (data['error']) {
 				res.writeHead(500)
 			} else {

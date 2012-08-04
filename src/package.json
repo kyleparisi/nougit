@@ -5,7 +5,8 @@
 	"dependencies": {
 		"jade" : "0.x.x",
 		"express" : "3.0.x",
-		"mongojs" : "0.4.x"
+		"mongojs" : "0.4.x",
+		"node-markdown" : "0.1.x"
 	},
 	"engine" : "node >= 0.8.x"
 }

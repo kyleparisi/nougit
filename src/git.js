@@ -350,30 +350,41 @@ module.exports = (function() {
 			// store any errors
 			var errs = [],
 			    succs = [];
-			// iterate over files
-			files.forEach(function(val,key) {
-				// execute git add for file
-				exec('git ' + operation + ' ' + val, function(err, stdout, stderr) {
-					// if error, push message into errs
-					if (err || stderr) {
-						errs.push(err || {
-							file : val,
-							error : stderr
-						});
-					// all is good
-					} else {
-						succs.push(val);
-					}
-					// if last in iteration pass output into callback
-					if (val === files[files.length - 1]) {
-						process.chdir(back);
-						callback.call(this, {
-							errors : errs,
-							added : succs
-						});
-					}
+			if (!files.length) {
+				callback.call(this, {
+					errors : errs,
+					added : succs
 				});
-			});
+			} else {
+				// iterate over files
+				files.forEach(function(val,key) {
+					// execute git add for file
+					exec('git ' + operation + ' ' + val, function(err, stdout, stderr) {
+						// if error, push message into errs
+						
+						console.log(stdout);
+						console.log(val);
+						
+						if (err || stderr) {
+							errs.push(err || {
+								file : val,
+								error : stderr
+							});
+						// all is good
+						} else {
+							succs.push(val);
+						}
+						// if last in iteration pass output into callback
+						if (val === files[files.length - 1]) {
+							process.chdir(back);
+							callback.call(this, {
+								errors : errs,
+								added : succs
+							});
+						}
+					});
+				});
+			}
 		} else {
 			callback.call(this, {
 				error : 'Invalid repository'
@@ -395,6 +406,14 @@ module.exports = (function() {
 	 */
 	function remove(path, files, callback) {
 		stage('rm --cached', path, files, callback);
+	}
+	
+	/*
+	 * unstage() - public
+	 * removes the array of files in the specified repository for commit
+	 */
+	function unstage(path, files, callback) {
+		stage('reset HEAD', path, files, callback);
 	}
 	
 	/*
@@ -545,7 +564,8 @@ module.exports = (function() {
 		commit : commit,
 		tree : tree,
 		branch : branch,
-		checkout : checkout
+		checkout : checkout,
+		unstage : unstage
 	};
   
 })();

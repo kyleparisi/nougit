@@ -386,8 +386,13 @@ h2#current {
 .stage .options {
 	text-align: right;
 	padding: 12px;
-	background: #ffffff; 
-	border-top: 1px solid #d2d2d2;
+	border-top: 1px solid #0e0e0e;
+	background: #636363; 
+	background: -webkit-linear-gradient(top, #636363 0%,#0e0e0e 100%);
+}
+
+.stage .options .button {
+	margin-left: 12px;
 }
 
 .stage ul {
@@ -411,6 +416,22 @@ h2#current {
 	color: #fff;
 	background: #00478e;
 	background: -webkit-linear-gradient(top, #00478e 0%,#066dab 100%);
+}
+
+.stage li[title="modified"]::before {
+	content: 'Modified: ';
+}
+
+.stage li[title="new file"]::before {
+	content: 'New File: ';
+}
+
+.stage li[title="deleted"]::before {
+	content: 'Deleted: ';
+}
+
+.stage li[title="untracked"] {
+	
 }
 
 .commit_wrapper {
