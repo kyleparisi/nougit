@@ -52,7 +52,7 @@ module.exports = (function() {
 		    email, 
 		    git_version, 
 		    node_version = process.versions['node'], 
-		    repository_dir = (is_dev) ? process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] + '/nougitrepos' : process.cwd() + '/public/repositories';
+		    repository_dir = (is_dev) ? home_dir + '/nougitrepos' : process.cwd() + '/public/repositories';
 						
 		if (!fs.existsSync(repository_dir)) {
 			fs.mkdirSync(repository_dir);

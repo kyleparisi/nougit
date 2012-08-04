@@ -288,7 +288,7 @@ module.exports = (function() {
 							});
 						}
 					// all is good
-					} else if (stdout) {
+					} else {
 						process.chdir(back);
 						callback.call(this, parseStatus(status, stdout));
 					}
@@ -394,7 +394,7 @@ module.exports = (function() {
 	 * removes the array of files in the specified repository for commit
 	 */
 	function remove(path, files, callback) {
-		stage('rm', path, files, callback);
+		stage('rm --cached', path, files, callback);
 	}
 	
 	/*

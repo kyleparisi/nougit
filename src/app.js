@@ -103,7 +103,7 @@
 	// create a new repository
 	app.post('/repositories/create', function(req, res) {
 		var name = req.body.name,
-		    description = req.body.description;
+		    description = req.body.desc;
 		git.create(name, description, config['repository_dir'], function(data) {
 			if (data['error']) {
 				res.writeHead(500)

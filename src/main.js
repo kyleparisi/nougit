@@ -24,15 +24,16 @@ module.exports = (function() {
 	// get modules
 	var fs = require('fs'),
 	    repos,
-	    config;
+	    config,
+	    app_root = process.cwd();
 	
 	/*
 	 * updateConfig() - private
 	 * checks if config exists and updates the variable with it's contents
 	 */
 	function updateConfig() {
-		if (fs.existsSync('./config.json')) {
-			config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+		if (fs.existsSync(app_root + '/config.json')) {
+			config = JSON.parse(fs.readFileSync(app_root + '/config.json', 'utf8'));
 		}
 	}
 		
@@ -41,8 +42,8 @@ module.exports = (function() {
 	 * retrieves repo list and passes it to callback
 	 */
 	function repositories(callback) {
-		if (fs.existsSync('./repos.json', 'utf8')) {
-			repos = fs.readFileSync('./repos.json', 'utf8');
+		if (fs.existsSync(app_root + '/repos.json', 'utf8')) {
+			repos = fs.readFileSync(app_root + '/repos.json', 'utf8');
 			callback.call(this, JSON.parse(repos));
 		} else {
 			generatefile(callback);
@@ -70,7 +71,7 @@ module.exports = (function() {
 				repos.push(repo);
 		    }
 		});
-		fs.writeFile('./repos.json', JSON.stringify(repos), function() {
+		fs.writeFile(app_root + '/repos.json', JSON.stringify(repos), function() {
 			if (callback) {
 				callback.call(this, repos);
 			}

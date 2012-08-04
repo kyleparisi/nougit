@@ -72,6 +72,14 @@ ul {
 	border-bottom: 1px solid #fefefe;
 }
 
+.commitplus {
+	background-image: url('/assets/images/icons/commit_plus.png');
+}
+
+.commit_minus {
+	background-image: url('/assets/images/icons/commit_minus.png');
+}
+
 .plus {
 	background-image: url('/assets/images/icons/file_plus.png');
 }
@@ -86,6 +94,14 @@ ul {
 
 .cancel {
 	background-image: url('/assets/images/icons/cancel.png');
+}
+
+.list1 {
+	background-image: url('/assets/images/icons/list1.png');
+}
+
+.list2 {
+	background-image: url('/assets/images/icons/list2.png');
 }
 
 /* Header, Footer, and Logo
@@ -302,7 +318,8 @@ h2#current {
 /* Commit History
 */
 
-.commit {
+.commit,
+.stage {
 	margin: 12px;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 	padding: 0 0 12px 0;
@@ -310,7 +327,8 @@ h2#current {
 	border: 1px solid #a90329;
 }
 
-.commit .hash {
+.commit .hash,
+.stage h3 {
 	background: #a90329; 
 	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
 	color: #ffffff;
@@ -340,6 +358,76 @@ h2#current {
 	background: url('/assets/images/icons/comment.png') 12px 12px no-repeat #ffffff;
 	background-size: 24px 24px;
 	border-radius: 3px;
+}
+
+/* Staging Panel
+*/
+
+.stage {
+	padding-bottom: 0;
+}
+
+.stage h3 {
+	text-shadow: none;
+	margin: 0;
+	font-size: 16px;
+}
+
+.stage h4 {
+	padding: 12px 12px 0 12px;
+	margin: 0;
+}
+
+.stage p {
+	font-size: 14px;
+	margin: 12px;
+}
+
+.stage .options {
+	text-align: right;
+	padding: 12px;
+	background: #ffffff; 
+	border-top: 1px solid #d2d2d2;
+}
+
+.stage ul {
+	border: 1px solid #999;
+	margin: 12px;
+	height: 120px;
+	overflow: auto;
+	background: #fff;
+}
+
+.stage ul li {
+	padding: 4px 8px;
+}
+
+.stage ul li:hover {
+	background-color: #f1f1f1;
+	cursor: pointer;
+}
+
+.stage li.selected {
+	color: #fff;
+	background: #00478e;
+	background: -webkit-linear-gradient(top, #00478e 0%,#066dab 100%);
+}
+
+.commit_wrapper {
+	margin: 12px 48px 12px 12px;
+}
+
+#commit_message {
+	width: 100%;
+	padding: 6px 16px;
+	font-size: 16px;
+	border: 1px solid #0e0e0e;
+	background-color: #ffffff;
+}
+
+#commit_message:focus {
+	box-shadow: 0 0 6px rgba(0,0,0,0.4);
+	outline: none;
 }
 
 /* Dialogs

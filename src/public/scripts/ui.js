@@ -218,6 +218,7 @@ nougit['ui'] = (function() {
 			
 			nougit.api.get('/status/' + nougit.repos.current.name, function(data) {
 				neckbeard.get('status', function(temp) {
+					
 					content.innerHTML = neckbeard.compile(temp, {});
 					var stagedList = _.dom.get('#staged_list'),
 					    notstagedList = _.dom.get('#notstaged_list'),
@@ -235,12 +236,124 @@ nougit['ui'] = (function() {
 						makeitem(this, untrackedList);
 					});
 					
+					bindfilelist();
+					
+					function bindfilelist() {
+						var stageable_files = _.dom.get('.status_file');
+
+						_.each(stageable_files, function() {
+							var item = this;
+							_.bind(item, 'click', function() {
+								if (_.dom.hasClass(item, 'selected')) {
+									_.dom.deleteClass(item, 'selected');
+								} else {
+									_.dom.insertClass(item, 'selected');
+								}
+							});
+						});
+					}
+					
 					function makeitem(text, appendto) {
 						var item = document.createElement('li');
 						item.className = 'status_file';
 						item.innerHTML = text;
 						appendto.appendChild(item);
 					}
+					
+					function commit(message) {
+						// call api here
+					}
+					
+					function stageSelected() {
+						var staged = _.dom.get('#staged_list'),
+						    untracked = _.dom.get('.selected', _.dom.get('#untracked_list')),
+						    notstaged = _.dom.get('.selected', _.dom.get('#notstaged_list')),
+						    files = [];
+						
+						_.each(untracked, function() {
+							var newfile = this.cloneNode();
+							newfile.innerHTML = this.innerHTML;
+							_.dom.deleteClass(newfile, 'selected');
+							staged.appendChild(newfile);
+							this.parentNode.removeChild(this);
+							files.push(this.innerHTML);
+						});
+						
+						_.each(notstaged, function() {
+							var newfile = this.cloneNode();
+							newfile.innerHTML = this.innerHTML;
+							_.dom.deleteClass(newfile, 'selected');
+							staged.appendChild(newfile);
+							this.parentNode.removeChild(this);
+							files.push(this.innerHTML);
+						});
+						
+						bindfilelist();
+						
+						// call api here
+					}
+					
+					function stageAll() {
+						var staged = _.dom.get('#staged_list'),
+						    untracked = _.dom.get('li', _.dom.get('#untracked_list')),
+						    notstaged = _.dom.get('li', _.dom.get('#notstaged_list')),
+						    files = [];
+						
+						_.each(untracked, function() {
+							var newfile = this.cloneNode();
+							newfile.innerHTML = this.innerHTML;
+							_.dom.deleteClass(newfile, 'selected');
+							staged.appendChild(newfile);
+							this.parentNode.removeChild(this);
+							files.push(this.innerHTML);
+						});
+						
+						_.each(notstaged, function() {
+							var newfile = this.cloneNode();
+							newfile.innerHTML = this.innerHTML;
+							_.dom.deleteClass(newfile, 'selected');
+							staged.appendChild(newfile);
+							this.parentNode.removeChild(this);
+							files.push(this.innerHTML);
+						});
+						
+						bindfilelist();
+						
+						// call api here
+					}
+					
+					function unstageSelected() {
+						var selected = _.dom.get('.selected', _.dom.get('#staged_list')),
+						    notstaged = _.dom.get('#notstaged_list'),
+							files = [];
+							
+						_.each(selected, function() {
+							files.push(this.innerHTML);
+							var newfile = this.cloneNode();
+							newfile.innerHTML = this.innerHTML;
+							_.dom.deleteClass(newfile, 'selected');
+							this.parentNode.removeChild(this);
+							notstaged.appendChild(newfile);
+						});
+						
+						bindfilelist();
+						
+						// call api here
+					}
+					
+					/* Status Bindings
+					*/
+					var button = {
+						commit : _.dom.get('#commit_files'),
+						unstage : _.dom.get('#unstage_files'),
+						stageall : _.dom.get('#stageAll'),
+						stageselected : _.dom.get('#stageSelected')
+					}
+					
+					_.bind(button.stageall, 'click', stageAll);
+					_.bind(button.stageselected, 'click', stageSelected);
+					_.bind(button.unstage, 'click', unstageSelected);
+					
 					
 				});
 			}, function(err) {
