@@ -319,7 +319,8 @@ h2#current {
 */
 
 .commit,
-.stage {
+.stage,
+.info {
 	margin: 12px;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 	padding: 0 0 12px 0;
@@ -449,6 +450,31 @@ h2#current {
 #commit_message:focus {
 	box-shadow: 0 0 6px rgba(0,0,0,0.4);
 	outline: none;
+}
+
+/* Info
+*/
+
+.info > h3 {
+	background: #a90329; 
+	background: -webkit-linear-gradient(top,  #a90329 0%,#8f0222 50%,#6d0019 100%);
+	color: #ffffff;
+	padding: 12px;
+	margin: 0;
+}
+
+.info > p {
+	margin: 12px 12px 0px 12px;
+	border: 1px solid #999;
+	padding: 12px;
+	background-color: #ffffff;
+}
+
+.info .markdown {
+	background: #ffffff;
+	margin: 24px;
+	border: 1px solid #999;
+	padding: 12px;
 }
 
 /* Dialogs

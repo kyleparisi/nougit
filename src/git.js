@@ -356,6 +356,7 @@ module.exports = (function() {
 					added : succs
 				});
 			} else {
+				console.log(files);
 				// iterate over files
 				files.forEach(function(val,key) {
 					// execute git add for file

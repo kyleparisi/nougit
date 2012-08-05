@@ -245,22 +245,19 @@ nougit['ui'] = (function() {
 						makeitem(item, untrackedList);
 					});
 					
-					bindfilelist();
 					
-					function bindfilelist() {
-						var stageable_files = _.dom.get('.status_file');
+					var stageable_files = _.dom.get('.status_file');
 
-						_.each(stageable_files, function() {
-							var item = this;
-							_.bind(item, 'click', function() {
-								if (_.dom.hasClass(item, 'selected')) {
-									_.dom.deleteClass(item, 'selected');
-								} else {
-									_.dom.insertClass(item, 'selected');
-								}
-							});
+					_.each(stageable_files, function() {
+						var item = this;
+						_.bind(item, 'click', function() {
+							if (_.dom.hasClass(item, 'selected')) {
+								_.dom.deleteClass(item, 'selected');
+							} else {
+								_.dom.insertClass(item, 'selected');
+							}
 						});
-					}
+					});
 					
 					function makeitem(text, appendto) {
 						var item = document.createElement('li');
@@ -293,124 +290,86 @@ nougit['ui'] = (function() {
 					
 					function stageSelected() {
 						var staged = _.dom.get('#staged_list'),
-						    untracked = _.dom.get('.selected', _.dom.get('#untracked_list')),
-						    notstaged = _.dom.get('.selected', _.dom.get('#notstaged_list')),
+						    untracked = Array.prototype.slice.call(_.dom.get('.selected', _.dom.get('#untracked_list'))),
+						    notstaged = Array.prototype.slice.call(_.dom.get('.selected', _.dom.get('#notstaged_list'))),
 						    files = [];
 						
-						_.each(untracked, function() {
-							var newfile = this.cloneNode();
-							newfile.innerHTML = this.innerHTML;
-							_.dom.deleteClass(newfile, 'selected');
-							staged.appendChild(newfile);
-							this.parentNode.removeChild(this);
+						_.each(untracked.concat(notstaged), function() {
 							files.push({
 								file : this.innerHTML,
 								status : this.title
 							});
 						});
-						
-						_.each(notstaged, function() {
-							var newfile = this.cloneNode();
-							newfile.innerHTML = this.innerHTML;
-							_.dom.deleteClass(newfile, 'selected');
-							staged.appendChild(newfile);
-							this.parentNode.removeChild(this);
-							files.push({
-								file : this.innerHTML,
-								status : this.title
+						setTimeout(function() {
+							// call api here
+							nougit.api.put('/stage/' + nougit.repos.current.name, {
+								files : files
+							}, function(data) {
+								console.log(data);
+								uialert('Files Staged!', 'success');
+								reloadPanel();
+							}, function(err) {
+								uialert(err.error);
+								reloadPanel();
 							});
-						});
-
-						bindfilelist();
-						
-						// call api here
-						nougit.api.put('/stage/' + nougit.repos.current.name, {
-							files : files
-						}, function(data) {
-							console.log(data);
-							uialert('Files Staged!', 'success');
-							reloadPanel();
-						}, function(err) {
-							uialert(err.error);
-							reloadPanel();
-						});
+						}, 100);
 					}
 					
 					function stageAll() {
 						var staged = _.dom.get('#staged_list'),
-						    untracked = _.dom.get('li', _.dom.get('#untracked_list')),
-						    notstaged = _.dom.get('li', _.dom.get('#notstaged_list')),
+						    untracked = Array.prototype.slice.call(_.dom.get('li', _.dom.get('#untracked_list'))),
+						    notstaged = Array.prototype.slice.call(_.dom.get('li', _.dom.get('#notstaged_list'))),
 						    files = [];
 						
-						_.each(untracked, function() {
-							var newfile = this.cloneNode();
-							newfile.innerHTML = this.innerHTML;
-							_.dom.deleteClass(newfile, 'selected');
-							staged.appendChild(newfile);
-							this.parentNode.removeChild(this);
+						_.each(untracked.concat(notstaged), function() {
 							files.push({
 								file : this.innerHTML,
 								status : this.title
 							});
 						});
 						
-						_.each(notstaged, function() {
-							var newfile = this.cloneNode();
-							newfile.innerHTML = this.innerHTML;
-							_.dom.deleteClass(newfile, 'selected');
-							staged.appendChild(newfile);
-							this.parentNode.removeChild(this);
-							files.push({
-								file : this.innerHTML,
-								status : this.title
+						setTimeout(function() {						
+							// call api here
+							nougit.api.put('/stage/' + nougit.repos.current.name, {
+								files : files
+							}, function(data) {
+								console.log(data);
+								uialert('Files staged!', 'success');
+								reloadPanel();
+							}, function(err) {
+								uialert(err);
+								reloadPanel();
 							});
-						});
-						
-						bindfilelist();
-						
-						// call api here
-						nougit.api.put('/stage/' + nougit.repos.current.name, {
-							files : files
-						}, function(data) {
-							console.log(data);
-							uialert('Files staged!', 'success');
-							reloadPanel();
-						}, function(err) {
-							uialert(err);
-							reloadPanel();
-						});
+						}, 100);
 					}
 					
 					function unstageSelected() {
 						var selected = _.dom.get('.selected', _.dom.get('#staged_list')),
 						    untracked = _.dom.get('#untracked_list'),
 							files = [];
-							
+							console.log(selected);
 						_.each(selected, function() {
 							files.push({
 								file : this.innerHTML,
 								status : this.title
 							});
-							var newfile = this.cloneNode();
-							newfile.innerHTML = this.innerHTML;
-							_.dom.deleteClass(newfile, 'selected');
-							this.parentNode.removeChild(this);
-							untracked.appendChild(newfile);
 						});
 						
-						bindfilelist();
+						console.log(files);
 						
-						// call api here
-						nougit.api.put('/unstage/' + nougit.repos.current.name, {
-							files : files
-						}, function(data) {
-							console.log(data);
-							uialert('Files Unstaged!', 'success');
-							reloadPanel();
-						}, function(err) {
-							uialert(err);
-							reloadPanel();
-						});
+						setTimeout(function() {
+							// call api here
+							nougit.api.put('/unstage/' + nougit.repos.current.name, {
+								files : files
+							}, function(data) {
+								console.log(data);
+								uialert('Files Unstaged!', 'success');
+								reloadPanel();
+							}, function(err) {
+								uialert(err);
+								reloadPanel();
+							});
+						}, 100);
 					}
 					
 					/* Status Bindings
@@ -444,6 +403,17 @@ nougit['ui'] = (function() {
 		'info' : function() {
 			current.innerHTML = 'Info';
 			content.innerHTML = '';
+			
+			nougit.api.get('/repositories/info/' + nougit.repos.current.name, function(data) {
+				neckbeard.get('info', function(temp) {
+					content.innerHTML = neckbeard.compile(temp, data);
+					var origin = _.dom.get('#origin'),
+					    cloneat = encodeURI(location.origin + '/repositories/' + nougit.repos.current.name);
+					origin.innerHTML = cloneat;
+				});
+			}, function(err) {
+				uialert(err.error, 'error');
+			})
 		},
 		
 		'admin' : function() {
