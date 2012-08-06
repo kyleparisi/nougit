@@ -263,6 +263,63 @@
 		});
 	});
 	
+	// get list of remotes
+	app.get('/remotes/list/:repo', function(req, res) {
+		git.remote.list(config['repository_dir'] + '/' + req.param('repo'), function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
+	// get list of remotes
+	app.post('/remotes/add/:repo', function(req, res) {
+		var remote = req.body.remote,
+		    url = req.body.url;
+		git.remote.add(config['repository_dir'] + '/' + req.param('repo'), remote, url, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
+	// get list of remotes
+	app.put('/remotes/update/:repo', function(req, res) {
+		var remote = req.body.remote,
+		    url = req.body.url;
+		git.remote.update(config['repository_dir'] + '/' + req.param('repo'), remote, url, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
+	// remove a remote from repo
+	app.delete('/remotes/delete/:repo', function(req, res) {
+		var remote = req.body.remote;
+		git.remote.remove(config['repository_dir'] + '/' + req.param('repo'), remote, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		}); 
+	});
+	
 	/*
 	 * start server
 	 */

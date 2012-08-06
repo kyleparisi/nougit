@@ -555,6 +555,158 @@ module.exports = (function() {
 		}
 	}
 	
+	/*
+	 * remote - public
+	 * contains methods for adding removing and listing remotes
+	 */
+	var remote = (function() {
+		
+		/*
+		 * add() - public
+		 * adds a remote
+		 */
+		function add(path, remote, url, callback) {
+			var cmd = 'git remote add ' + remote + ' ' + url;
+			if (repository(path)) {
+				exec(cmd, function(err, stdout, stderr) {
+					if (err || stderr) {
+						console.log(err || stderr);
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								error : err || stderr
+							});
+						}
+					// all is good
+					} else {
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								message : 'Remote "' + remote + '" added!'
+							});
+						}
+					}
+				});
+			} else {
+				callback.call(this, {
+					error : 'Invalid repository'
+				});
+			}
+		}
+		
+		/*
+		 * update() - public
+		 * edits a remote
+		 */
+		function update(path, remote, url, callback) {
+			var cmd = 'git remote set-url ' + remote + ' ' + url;
+			if (repository(path)) {
+				exec(cmd, function(err, stdout, stderr) {
+					if (err || stderr) {
+						console.log(err || stderr);
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								error : err || stderr
+							});
+						}
+					// all is good
+					} else {
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								message : 'Remote "' + remote + '" updated!'
+							});
+						}
+					}
+				});
+			} else {
+				callback.call(this, {
+					error : 'Invalid repository'
+				});
+			}
+		}
+		
+		/*
+		 * remove() - public
+		 * removes a remote
+		 */
+		function remove(path, remote, callback) {
+			var cmd = 'git remote rm ' + remote;
+			if (repository(path)) {
+				exec(cmd, function(err, stdout, stderr) {
+					if (err || stderr) {
+						console.log(err || stderr);
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								error : err || stderr
+							});
+						}
+					// all is good
+					} else {
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								message : 'Remote "' + remote + '" removed!'
+							});
+						}
+					}
+				});
+			} else {
+				callback.call(this, {
+					error : 'Invalid repository'
+				});
+			}
+		}
+		
+		/*
+		 * list() - public
+		 * lists remotes
+		 */
+		function list(path, callback) {
+			var cmd = 'git remote -v';
+			if (repository(path)) {
+				exec(cmd, function(err, stdout, stderr) {
+					if (err || stderr) {
+						console.log(err || stderr);
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, {
+								error : err || stderr
+							});
+						}
+					// all is good
+					} else {
+						var list = {},
+						    parseme = stdout.split('\n');
+						
+						parseme.forEach(function(val, key) {
+							list[val.split('    ')[0]] = val.split('    ')[1];
+						});
+						
+						if (callback) {
+							process.chdir(back);
+							callback.call(this, list);
+						}
+					}
+				});
+			} else {
+				callback.call(this, {
+					error : 'Invalid repository'
+				});
+			}
+		}
+		
+		return {
+			add : add,
+			update : update,
+			remove : remove,
+			list : list
+		}
+	})();
+	
+	
 	return {
 		history : history,
 		create : create,
@@ -566,7 +718,8 @@ module.exports = (function() {
 		tree : tree,
 		branch : branch,
 		checkout : checkout,
-		unstage : unstage
+		unstage : unstage,
+		remote : remote
 	};
   
 })();
