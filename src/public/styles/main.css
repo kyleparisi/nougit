@@ -106,12 +106,12 @@ ul {
 
 .push {
 	background-image: url('/assets/images/icons/push.png');
-	background-size: 24px 18px;
+	background-size: 24px 16px;
 }
 
 .pull {
 	background-image: url('/assets/images/icons/pull.png');
-	background-size: 24px 18px;
+	background-size: 24px 16px;
 }
 
 .newbranch {
@@ -125,12 +125,12 @@ ul {
 
 .editremote {
 	background-image: url('/assets/images/icons/editremote.png');
-	background-size: 24px 18px;
+	background-size: 24px 16px;
 }
 
 .addremote {
 	background-image: url('/assets/images/icons/addremote.png');
-	background-size: 24px 18px;
+	background-size: 24px 16px;
 }
 
 /* Header, Footer, and Logo

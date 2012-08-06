@@ -420,9 +420,140 @@ nougit['ui'] = (function() {
 			current.innerHTML = 'Admin';
 			content.innerHTML = '';
 			
+			var remotes, branches = [];
+			
 			neckbeard.get('admin', function(temp) {
 				content.innerHTML = temp;
+				
+				nougit.api.get('/remotes/list/' + nougit.repos.current.name, function(remlist) {
+					remotes = remlist;
+					// populate select list
+					if (remotes.length) {
+						_.each(remotes, function(key, val) {
+							var option = document.createElement('option');
+							option.innerHTML = key;
+							option.value = key;
+							_.dom.get('#selected_remote').appendChild(option);
+							
+							// list remotes here
+							var remoteListItem = document.createElement('li'),
+							    remoteName = document.createElement('span');
+							remoteName.className = 'remoteName';
+							remoteName.innerHTML = key;
+							remoteListItem.className = 'remote_item';
+							remoteListItem.appendChild(remoteName);
+							remoteListItem.innerHTML +=  + ' (' + val + ')';
+							_.dom.get('#remotes').appendChild(remoteListItem);
+							
+							// bind remote list item logic here
+							_.bind(remoteListItem, 'click', function() {
+								var remotes_all = _.dom.get('.remote_item');
+								
+								if (!_.dom.hasClass(this, 'selected')) {
+									_.each(remotes_all, function() {
+										_.dom.deleteClass(this, 'selected');
+									});
+									_.dom.insertClass(this, 'selected');
+								} else {
+									_.dom.deleteClass(this, 'selected');
+								}
+								
+							});
+						});
+					} else {
+						var option = document.createElement('option');
+						option.innerHTML = '---';
+						option.value = null;
+						_.dom.get('#selected_remote').appendChild(option);
+						_.dom.get('#push_pull').style.display = 'none';
+					}
+				});
+				
+				nougit.api.get('/repositories/info/' + nougit.repos.current.name, function(info) {
+					branches.push(info.branches.current);
+					branches.concat(info.branches.others);
+					// populate select list
+					_.each(branches, function() {
+						var option = document.createElement('option');
+						option.innerHTML = this;
+						option.value = this;
+						_.dom.get('#selected_branch').appendChild(option);
+						
+						var branchListItem = document.createElement('li');
+						branchListItem.className = 'branch_item';
+						branchListItem.innerHTML = this;
+						_.dom.get('#branches').appendChild(branchListItem);
+						
+						// bind branch list item logic here
+						_.bind(branchListItem, 'click', function() {
+							var branches_all = _.dom.get('.branch_item');
+							
+							if (!_.dom.hasClass(this, 'selected')) {
+								_.each(branches_all, function() {
+									_.dom.deleteClass(this, 'selected');
+								});
+								_.dom.insertClass(this, 'selected');
+							} else {
+								_.dom.deleteClass(this, 'selected');
+							}
+							
+						});
+					});
+				});
+				
+				// bind admin buttons
+				var buttons = {
+					push : _.dom.get('#action_push'),
+					pull : _.dom.get('#action_fetch'),
+					addremote : _.dom.get('#add_remote'),
+					editremote : _.dom.get('#edit_remote'),
+					checkout : _.dom.get('#checkout_branch'),
+					newbranch : _.dom.get('#create_branch')
+				}
+				
+				// push to remote
+				_.bind(buttons.push, 'click', function(e) {
+					console.log(e.target);
+				});
+				
+				// fetch from remote
+				_.bind(buttons.pull, 'click', function(e) {
+					console.log(e.target);
+				});
+				
+				// create a new remote
+				_.bind(buttons.addremote, 'click', function(e) {
+					console.log('Show add remote dialog.');
+				});
+				
+				// edit existing remote
+				_.bind(buttons.editremote, 'click', function(e) {
+					console.log('Show edit remote dialog.');
+				});
+				
+				// checkout a branch
+				_.bind(buttons.checkout, 'click', function(e) {
+					var branch = _.dom.get('.selected', _.dom.get('#branches'))[0];
+					if (branch) {
+						nougit.api.get('/checkout/' + nougit.repos.current.name + '/' + branch.innerHTML, function(data) {
+							uialert(data, 'success');
+							reloadPanel();
+						}, function(err) {
+							uialert(err.error, 'error');
+							reloadPanel();
+						});
+					} else {
+						uialert('Please select a branch to checkout.', 'error');
+					}
+				});
+				
+				// create new branch
+				_.bind(buttons.newbranch, 'click', function(e) {
+					console.log('Show new branch dialog.');
+				});
+				
 			});
+			
 		}
 	};
 	

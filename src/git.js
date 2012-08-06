@@ -706,6 +706,70 @@ module.exports = (function() {
 		}
 	})();
 	
+	function push(path, remote, branch, callback) {
+		var cmd = 'git push -u ' + ((remote) ? remote : '') + ' ' + ((branch) ? branch : '');
+		if (repository(path)) {
+			exec(cmd, function(err, stdout, stderr) {
+				
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else if (stdout) {
+					
+					// check if password is required
+					
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							message : stdout
+						});
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
+	function pull(path, remote, branch, callback) {
+		var cmd = 'git pull ' + ((remote) ? remote : '') + ' ' + ((branch) ? branch : '');
+		if (repository(path)) {
+			exec(cmd, function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else if (stdout) {
+					
+					// check if password is required
+					
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							message : stdout
+						});
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
 	
 	return {
 		history : history,
@@ -719,7 +783,9 @@ module.exports = (function() {
 		branch : branch,
 		checkout : checkout,
 		unstage : unstage,
-		remote : remote
+		remote : remote,
+		push : push,
+		pull : pull
 	};
   
 })();

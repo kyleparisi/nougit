@@ -91,9 +91,15 @@
 	// get repository info
 	app.get('/repositories/info/:repo', function(req, res) {
 		var info = {},
-		    readme = md(fs.readFileSync(config['repository_dir'] + '/' + req.param('repo') + '/README.md', 'utf8')),
+		    readme,
 		    url = config['repository_dir'] + '/' + req.param('repo') + '.git',
 		    branch = null;
+		
+		if (fs.existsSync(config['repository_dir'] + '/' + req.param('repo') + '/README.md')) {
+			readme = md(fs.readFileSync(config['repository_dir'] + '/' + req.param('repo') + '/README.md', 'utf8'));
+		} else {
+			readme = null;
+		}
 		
 		git.tree(config['repository_dir'] + '/' + req.param('repo'), function(data) {
 			branch = data;
@@ -276,7 +282,7 @@
 		}); 
 	});
 	
-	// get list of remotes
+	// add new remotes
 	app.post('/remotes/add/:repo', function(req, res) {
 		var remote = req.body.remote,
 		    url = req.body.url;
@@ -291,7 +297,7 @@
 		}); 
 	});
 	
-	// get list of remotes
+	// update remotes
 	app.put('/remotes/update/:repo', function(req, res) {
 		var remote = req.body.remote,
 		    url = req.body.url;
@@ -318,6 +324,45 @@
 			res.write(JSON.stringify(data));
 			res.end();
 		}); 
+	});
+	
+	// checkout a branch
+	app.get('/checkout/:repo/:branch', function(req, res) {
+		git.checkout(config['repository_dir'] + '/' + req.param('repo'), req.param('branch'), function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
+	// push a repo
+	app.get('/push/:repo/:remote/:branch', function(req, res) {
+		git.push(config['repository_dir'] + '/' + req.param('repo'), req.param('remote'), req.param('branch'), function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
+	// fetch a repo
+	app.get('/pull/:repo/:remote/:branch', function(req, res) {
+		git.pull(config['repository_dir'] + '/' + req.param('repo'), req.param('remote'), req.param('branch'), function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
 	});
 	
 	/*

@@ -7,8 +7,8 @@
 		<select id="selected_branch"></select>
 	</p>
 	<div class="options">
-		<a href="#pull" class="button pull">Fetch</a>
-		<a href="#push" class="button push">Push</a>
+		<a href="#pull" id="action_fetch" class="button pull">Fetch</a>
+		<a href="#push" id="action_push" class="button push">Push</a>
 	</div>
 </div>
 
@@ -16,7 +16,7 @@
 	<h3>Branches</h3>
 	<ul id="branches"></ul>
 	<div class="options">
-		<a href="#newbranch" class="button action newbranch">New Branch</a>
+		<a href="#newbranch" id="create_branch" class="button action newbranch">New Branch</a>
 		<a href="#checkout" id="checkout_branch" class="button checkout">Checkout</a>
 	</div>
 </div>
