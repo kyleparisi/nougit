@@ -419,6 +419,10 @@ nougit['ui'] = (function() {
 		'admin' : function() {
 			current.innerHTML = 'Admin';
 			content.innerHTML = '';
+			
+			neckbeard.get('admin', function(temp) {
+				content.innerHTML = temp;
+			});
 		}
 	};
 	

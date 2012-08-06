@@ -1,0 +1,31 @@
+<div id="push_pull" class="stage">
+	<h3>Push/Pull</h3>
+	<p>
+		<label for="selected_remote">Remote</label>
+		<select id="selected_remote"></select>
+		<label for="selected_branch">Branch</label>
+		<select id="selected_branch"></select>
+	</p>
+	<div class="options">
+		<a href="#pull" class="button pull">Fetch</a>
+		<a href="#push" class="button push">Push</a>
+	</div>
+</div>
+
+<div class="stage">
+	<h3>Branches</h3>
+	<ul id="branches"></ul>
+	<div class="options">
+		<a href="#newbranch" class="button action newbranch">New Branch</a>
+		<a href="#checkout" id="checkout_branch" class="button checkout">Checkout</a>
+	</div>
+</div>
+
+<div class="stage">
+	<h3>Remotes</h3>
+	<ul id="remotes"></ul>
+	<div class="options">
+		<a href="#editremote" id="edit_remote" class="button action editremote">Edit Remote</a>
+		<a href="#addremote" id="add_remote" class="button action addremote">Add Remote</a>
+	</div>
+</div>

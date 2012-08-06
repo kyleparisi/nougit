@@ -104,6 +104,35 @@ ul {
 	background-image: url('/assets/images/icons/list2.png');
 }
 
+.push {
+	background-image: url('/assets/images/icons/push.png');
+	background-size: 24px 18px;
+}
+
+.pull {
+	background-image: url('/assets/images/icons/pull.png');
+	background-size: 24px 18px;
+}
+
+.newbranch {
+	background-image: url('/assets/images/icons/newbranch.png');
+	background-size: 20px 24px;
+}
+
+.checkout {
+	background-image: url('/assets/images/icons/checkout.png');
+}
+
+.editremote {
+	background-image: url('/assets/images/icons/editremote.png');
+	background-size: 24px 18px;
+}
+
+.addremote {
+	background-image: url('/assets/images/icons/addremote.png');
+	background-size: 24px 18px;
+}
+
 /* Header, Footer, and Logo
 */
 
@@ -384,7 +413,8 @@ h2#current {
 	margin: 12px;
 }
 
-.stage .options {
+.stage .options,
+.info .options {
 	text-align: right;
 	padding: 12px;
 	border-top: 1px solid #0e0e0e;
@@ -476,6 +506,11 @@ h2#current {
 	border: 1px solid #999;
 	padding: 12px;
 }
+
+/* Admin
+*/
+
+
 
 /* Dialogs
 */

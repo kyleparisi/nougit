@@ -1,6 +1,6 @@
 <div class="info">
 	<h3>Current Branch: <span class="code">#{branches.current}</span></h3>
-	<p><strong>Clone Repo: </strong><span class="code">$ git clone <span id="origin"></span></span></p>
+	<p><span class="code">$ git clone <span id="origin"></span></span></p>
 </div>
 
 <div class="info">
