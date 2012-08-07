@@ -9,4 +9,34 @@ div#dialogs
 		div.options
 			a.button.cancel(href='#cancel') Cancel
 			a.button.save#save_repo(href='#save') Save
+	div#newbranch.dialog
+		h2 Create Branch
+		form#new_branch_form
+			label(for='newbranchinput') Branch Name
+			input(type='text', name='branch', placeholder='MyNewBranch')
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#save_new_branch(href='#save') Save
+	div#addremote.dialog
+		h2 Add Remote
+		form#add_remote_form
+			label(for='new_remote_name') Remote Name
+			input(type='text', name='remote', placeholder='MyRemoteName')
+			label(for='new_remote_url') Url
+			input(type='text', name='url', placeholder='http://127.0.0.1:8080/repositories/reponame')
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#save_new_remote(href='#save') Save
+	div#editremote.dialog
+		h2 Edit Remote
+		form#edit_remote_form
+			label(for='edit_remote_name') Remote Name
+			input(type='text', id='edit_remote_name', name='remote', disabled='disabled', placeholder='MyRemoteName')
+			label(for='edit_remote_url') Url
+			input(type='text', name='url', id='edit_remote_url', placeholder='http://127.0.0.1:8080/repositories/reponame')
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#update_existing_remote(href='#save') Save
+
+
 div#alert This is an alert!

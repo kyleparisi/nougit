@@ -1,9 +1,9 @@
 <div id="push_pull" class="stage">
 	<h3>Push/Pull</h3>
 	<p>
-		<label for="selected_remote">Remote</label>
+		<label for="selected_remote">Remote: </label>
 		<select id="selected_remote"></select>
-		<label for="selected_branch">Branch</label>
+		<label for="selected_branch">Branch: </label>
 		<select id="selected_branch"></select>
 	</p>
 	<div class="options">

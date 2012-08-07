@@ -1,0 +1,3 @@
+<li class="remote_item">
+	<span class="remoteName">#{name}</span> (<span class="remoteUrl">#{url}</span>)</span>
+</li>

@@ -530,7 +530,15 @@ module.exports = (function() {
 	function checkout(path, branch, callback) {
 		if (repository(path)) {
 			exec('git checkout ' + branch, function(err, stdout, stderr) {
-				if (err || stderr) {
+
+				if ((stdout) || stderr.indexOf('Switched') > -1) {
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							message : (stdout) || (stderr)
+						});
+					}
+				} else if (err || stderr) {
 					console.log(err || stderr);
 					if (callback) {
 						process.chdir(back);
@@ -538,15 +546,7 @@ module.exports = (function() {
 							error : err || stderr
 						});
 					}
-				// all is good
-				} else if (stdout) {
-					if (callback) {
-						process.chdir(back);
-						callback.call(this, {
-							message : stdout
-						});
-					}
-				}
+				}  
 			});
 		} else {
 			callback.call(this, {
@@ -682,9 +682,10 @@ module.exports = (function() {
 						    parseme = stdout.split('\n');
 						
 						parseme.forEach(function(val, key) {
-							list[val.split('    ')[0]] = val.split('    ')[1];
+							if (val.split('\t')[0])
+							list[val.split('\t')[0]] = val.split('\t')[1].split(' ')[0];
 						});
-						
+
 						if (callback) {
 							process.chdir(back);
 							callback.call(this, list);
@@ -721,9 +722,7 @@ module.exports = (function() {
 					}
 				// all is good
 				} else if (stdout) {
-					
-					// check if password is required
-					
+										
 					if (callback) {
 						process.chdir(back);
 						callback.call(this, {
@@ -753,9 +752,7 @@ module.exports = (function() {
 					}
 				// all is good
 				} else if (stdout) {
-					
-					// check if password is required
-					
+										
 					if (callback) {
 						process.chdir(back);
 						callback.call(this, {

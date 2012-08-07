@@ -62,6 +62,41 @@ nougit['ui'] = (function() {
 		newRepository(_.dom.parseForm(_.dom.get('#new_repo')));
 	});
 	
+	// bind save remote
+	_.bind(_.dom.get('#save_new_remote'), 'click', function() {
+		nougit.api.post('/remotes/add/' + nougit.repos.current.name, _.dom.parseForm(_.dom.get('#add_remote_form')), function(data) {
+			uialert(data.message, 'success');
+			reloadPanel();
+			hideDialog('#addremote');
+		}, function(err) {
+			uialert(err.error, 'error');
+		});
+	});
+	
+	// bind new branch
+	_.bind(_.dom.get('#save_new_branch'), 'click', function() {
+		nougit.api.post('/branch/' + nougit.repos.current.name, _.dom.parseForm(_.dom.get('#new_branch_form')), function(data) {
+			uialert(data.message, 'success');
+			reloadPanel();
+			hideDialog('#newbranch');
+		}, function(err) {
+			uialert(err.error, 'error');
+			hideDialog('#newbranch');
+		});
+	});
+	
+	// bind update remote
+	_.bind(_.dom.get('#update_existing_remote'), 'click', function() {
+		nougit.api.put('/remotes/update/' + nougit.repos.current.name, _.dom.parseForm(_.dom.get('#edit_remote_form')), function(data) {
+			uialert(data.message, 'success');
+			reloadPanel();
+			hideDialog('#editremote');
+		}, function(err) {
+			uialert(err.error, 'error');
+		});
+	});
+	
+	
 	function reloadPanel() {
 		var current = _.dom.get('.active', _.dom.get('#footer'))[0];
 		current.click();
@@ -159,9 +194,11 @@ nougit['ui'] = (function() {
 			_.dom.deleteClass(alert_elm, 'error');
 		} else {
 			if (type === 'success') {
-				_.dom.insertClass(alert_elm, 'success');
 				_.dom.deleteClass(alert_elm, 'error');
+				_.dom.deleteClass(alert_elm, 'success');
+				_.dom.insertClass(alert_elm, 'success');
 			} else {
+				_.dom.deleteClass(alert_elm, 'error');
 				_.dom.deleteClass(alert_elm, 'success');
 				_.dom.insertClass(alert_elm, 'error');
 			}
@@ -427,51 +464,52 @@ nougit['ui'] = (function() {
 				
 				nougit.api.get('/remotes/list/' + nougit.repos.current.name, function(remlist) {
 					remotes = remlist;
+
 					// populate select list
-					if (remotes.length) {
-						_.each(remotes, function(key, val) {
+					if (JSON.stringify(remlist).length > 2) {
+						_.each(remlist, function(key, val) {
 							var option = document.createElement('option');
 							option.innerHTML = key;
 							option.value = key;
 							_.dom.get('#selected_remote').appendChild(option);
 							
-							// list remotes here
-							var remoteListItem = document.createElement('li'),
-							    remoteName = document.createElement('span');
-							remoteName.className = 'remoteName';
-							remoteName.innerHTML = key;
-							remoteListItem.className = 'remote_item';
-							remoteListItem.appendChild(remoteName);
-							remoteListItem.innerHTML +=  + ' (' + val + ')';
-							_.dom.get('#remotes').appendChild(remoteListItem);
-							
-							// bind remote list item logic here
-							_.bind(remoteListItem, 'click', function() {
-								var remotes_all = _.dom.get('.remote_item');
+							neckbeard.get('remote_list', function(temp) {
+								_.dom.get('#remotes').innerHTML += neckbeard.compile(temp, {
+									name : key,
+									url : val
+								});
 								
-								if (!_.dom.hasClass(this, 'selected')) {
-									_.each(remotes_all, function() {
+								var items = _.dom.get('.remote_item', _.dom.get('#remotes')),
+								    item = items[items.length - 1];
+								
+								_.bind(item, 'click', function() {
+									var remotes_all = _.dom.get('.remote_item');
+
+									if (!_.dom.hasClass(this, 'selected')) {
+										_.each(remotes_all, function() {
+											_.dom.deleteClass(this, 'selected');
+										});
+										_.dom.insertClass(this, 'selected');
+									} else {
 										_.dom.deleteClass(this, 'selected');
-									});
-									_.dom.insertClass(this, 'selected');
-								} else {
-									_.dom.deleteClass(this, 'selected');
-								}
-								
+									}
+
+								});
 							});
 						});
+						_.dom.get('#push_pull').style.display = 'block';
 					} else {
 						var option = document.createElement('option');
 						option.innerHTML = '---';
 						option.value = null;
 						_.dom.get('#selected_remote').appendChild(option);
-						_.dom.get('#push_pull').style.display = 'none';
 					}
 				});
 				
 				nougit.api.get('/repositories/info/' + nougit.repos.current.name, function(info) {
 					branches.push(info.branches.current);
-					branches.concat(info.branches.others);
+					branches = branches.concat(info.branches.others);
+
 					// populate select list
 					_.each(branches, function() {
 						var option = document.createElement('option');
@@ -513,22 +551,48 @@ nougit['ui'] = (function() {
 				
 				// push to remote
 				_.bind(buttons.push, 'click', function(e) {
-					console.log(e.target);
+					var remote = _.dom.get('#selected_remote').value,
+					    branch = _.dom.get('#selected_branch').value;
+					nougit.api.get('/push/' + nougit.repos.current.name + '/' + remote + '/' + branch, function(data) {
+						uialert(data.message, 'success');
+						reloadPanel();
+					}, function(err) {
+						uialert(err.error, 'error');
+						reloadPanel();
+					});
 				});
 				
 				// fetch from remote
 				_.bind(buttons.pull, 'click', function(e) {
-					console.log(e.target);
+					var remote = _.dom.get('#selected_remote').value,
+					    branch = _.dom.get('#selected_branch').value;
+					nougit.api.get('/pull/' + nougit.repos.current.name + '/' + remote + '/' + branch, function(data) {
+						uialert(data.message, 'success');
+						reloadPanel();
+					}, function(err) {
+						uialert(err.error, 'error');
+						reloadPanel();
+					});
 				});
 				
 				// create a new remote
 				_.bind(buttons.addremote, 'click', function(e) {
-					console.log('Show add remote dialog.');
+					showDialog(e.target.href);
 				});
 				
 				// edit existing remote
 				_.bind(buttons.editremote, 'click', function(e) {
-					console.log('Show edit remote dialog.');
+					var selected = _.dom.get('.selected', _.dom.get('#remotes'))[0];
+					if (selected) {
+						var name = _.dom.get('#edit_remote_name'),
+						    url = _.dom.get('#edit_remote_url');
+						
+						name.value = _.dom.get('.remoteName', selected)[0].innerHTML;
+						url.value = _.dom.get('.remoteUrl', selected)[0].innerHTML;
+						showDialog(e.target.href);
+					} else {
+						uialert('No remote selected.', 'error');
+					}
 				});
 				
 				// checkout a branch
@@ -536,11 +600,10 @@ nougit['ui'] = (function() {
 					var branch = _.dom.get('.selected', _.dom.get('#branches'))[0];
 					if (branch) {
 						nougit.api.get('/checkout/' + nougit.repos.current.name + '/' + branch.innerHTML, function(data) {
-							uialert(data, 'success');
+							uialert(data.message, 'success');
 							reloadPanel();
 						}, function(err) {
 							uialert(err.error, 'error');
-							reloadPanel();
 						});
 					} else {
 						uialert('Please select a branch to checkout.', 'error');
@@ -549,7 +612,7 @@ nougit['ui'] = (function() {
 				
 				// create new branch
 				_.bind(buttons.newbranch, 'click', function(e) {
-					console.log('Show new branch dialog.');
+					showDialog(e.target.href);
 				});
 				
 			});

@@ -365,6 +365,18 @@
 		});
 	});
 	
+	app.post('/branch/:repo', function(req, res) {
+		git.branch(config['repository_dir'] + '/' + req.param('repo'), req.body.branch, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
 	/*
 	 * start server
 	 */
