@@ -19,14 +19,14 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-module.exports = (function() {
-	
-	var is_dev = true;
-	
+module.exports = function(server) {
+		
 	var fs = require('fs'),
 	    exec = require('child_process').exec,
 	    config,
 	    home_dir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+	
+	console.log('Nougit initialized in ' + ((server) ? 'SERVER' : 'CLIENT') + ' mode...');
 	
 	/*
 	 * complete() - private
@@ -52,7 +52,7 @@ module.exports = (function() {
 		    email, 
 		    git_version, 
 		    node_version = process.versions['node'], 
-		    repository_dir = (is_dev) ? home_dir + '/nougitrepos' : process.cwd() + '/public/repositories';
+		    repository_dir = (!server) ? home_dir + '/nougitrepos' : process.cwd() + '/public/repositories';
 						
 		if (!fs.existsSync(repository_dir)) {
 			fs.mkdirSync(repository_dir);
@@ -113,4 +113,4 @@ module.exports = (function() {
 		config : config
 	};
 	
-})();
+};

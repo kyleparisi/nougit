@@ -419,6 +419,12 @@ h2#current {
 
 .commit .hash .code {
 	font-size: 14px;
+	color: #fff;
+	text-decoration: none;
+}
+
+.commit .hash .code:hover {
+	text-decoration: underline;
 }
 
 .commit .story {
@@ -696,6 +702,21 @@ h2#current {
 	margin: -138px 0 0 -184px;
 }
 
+#revert {
+	margin: -138px 0 0 -184px;
+}
+
+#revert p {
+	padding: 0 12px;
+}
+
+#which_commit {
+	padding: 12px;
+	margin: 0 12px 12px 12px;
+	color: #a90329;
+	background: #f1f1f1;
+	border-radius: 2px;
+}
 
 #alert {
 	position: fixed;

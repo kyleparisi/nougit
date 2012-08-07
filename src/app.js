@@ -23,10 +23,12 @@
 	
 	// init vars
 	var config,
+	// get mode
+	    mode = process.argv[2] === 'server',
 	// get native modules
 	    fs = require('fs'),
 	// get app modules
-	    setup = require('./setup.js'),
+	    setup = require('./setup.js')(mode),
 	    git = require('./git.js'),
     	nougit = require('./main.js'),
 	// get middleware
@@ -41,7 +43,7 @@
 	setup.init(function(data) {
 		config = data;
 	});
-
+	
 	// config server
 	app.configure(function() {
 
@@ -111,6 +113,7 @@
 			info.readme = readme;
 			info.url = url;
 			info.branches = branch;
+			info.server = mode;
 			res.write(JSON.stringify(info));
 			res.end();
 		});
@@ -365,8 +368,23 @@
 		});
 	});
 	
+	// new branch
 	app.post('/branch/:repo', function(req, res) {
 		git.branch(config['repository_dir'] + '/' + req.param('repo'), req.body.branch, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
+	
+	app.post('/reset/:repo', function(req, res) {
+		var hash = req.body.hash
+		git.reset(config['repository_dir'] + '/' + req.param('repo'), hash, function(data) {
 			if (data['error']) {
 				res.writeHead(500)
 			} else {

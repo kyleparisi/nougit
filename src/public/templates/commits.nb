@@ -1,5 +1,5 @@
 <li class="commit">
-	<div class="hash">Commit: <span class="code">#{commit}</span></div>
+	<div class="hash">Commit: <a href="#revert" class="code">#{commit}</a></div>
 	<div class="story"><a href="mailto:#{email}">#{author}</a> staged a commit on #{date}</div>
 	<p class="message">#{message}</div>
 </li>

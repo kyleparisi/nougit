@@ -37,6 +37,12 @@ div#dialogs
 		div.options
 			a.button.cancel(href='#cancel') Cancel
 			a.button.save#update_existing_remote(href='#save') Save
-
+	div#revert.dialog
+		h2 Revert Commit
+		p Are you sure you want to revert to this commit?
+		div#which_commit
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#revert_commit(href='#save') Revert
 
 div#alert This is an alert!

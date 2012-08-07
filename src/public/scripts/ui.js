@@ -96,6 +96,19 @@ nougit['ui'] = (function() {
 		});
 	});
 	
+	// bind revert commit
+	_.bind(_.dom.get('#revert_commit'), 'click', function(e) {
+		var hash = _.dom.get('#which_commit').innerHTML;
+		nougit.api.post('/reset/' + nougit.repos.current.name, {
+			hash : hash
+		}, function(data) {
+			uialert(data.message, 'success');
+			hideDialog(e.target.href);
+		}, function(err) {
+			uialert(err.error, 'error');
+		})
+	});
+	
 	
 	function reloadPanel() {
 		var current = _.dom.get('.active', _.dom.get('#footer'))[0];
@@ -247,6 +260,12 @@ nougit['ui'] = (function() {
 					};
 					neckbeard.get('commits', function(temp) {
 						commit_list.innerHTML += neckbeard.compile(temp, commit);
+						var commits = _.dom.get('.commit'),
+						    revert = _.dom.get('.code', commits[commits.length - 1])[0];
+						_.bind(revert, 'click', function(e) {
+							_.dom.get('#which_commit').innerHTML = e.target.innerHTML;
+							showDialog(e.target.href);
+						});
 					});
 				});
 			}, function(err) {
@@ -445,8 +464,8 @@ nougit['ui'] = (function() {
 				neckbeard.get('info', function(temp) {
 					content.innerHTML = neckbeard.compile(temp, data);
 					var origin = _.dom.get('#origin'),
-					    cloneat = encodeURI(location.origin + '/repositories/' + nougit.repos.current.name);
-					origin.innerHTML = cloneat;
+					    cloneat = '$ git clone ' + encodeURI(location.origin + '/repositories/' + nougit.repos.current.name);
+					origin.innerHTML = (!data.server) ? 'Cannot clone via HTTP when running in CLIENT mode.' : cloneat;
 				});
 			}, function(err) {
 				uialert(err.error, 'error');

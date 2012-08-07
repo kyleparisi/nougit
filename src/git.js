@@ -768,6 +768,36 @@ module.exports = (function() {
 		}
 	}
 	
+	function reset(path, hash, callback) {
+		var cmd = 'git reset -q ' + hash;
+		if (repository(path)) {
+			exec(cmd, function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else {
+										
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							message : 'Repository reset to commit: ' + hash
+						});
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
 	return {
 		history : history,
 		create : create,
@@ -782,7 +812,8 @@ module.exports = (function() {
 		unstage : unstage,
 		remote : remote,
 		push : push,
-		pull : pull
+		pull : pull,
+		reset : reset
 	};
   
 })();
