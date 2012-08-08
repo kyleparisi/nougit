@@ -740,6 +740,10 @@ module.exports = (function() {
 		}
 	})();
 	
+	/*
+	 * push() - public
+	 * pushes the specified branch to the specified remote
+	 */
 	function push(path, remote, branch, callback) {
 		var cmd = 'git push -u ' + ((remote) ? remote : '') + ' ' + ((branch) ? branch : '');
 		if (repository(path)) {
@@ -771,6 +775,10 @@ module.exports = (function() {
 		}
 	}
 	
+	/*
+	 * pull() - public
+	 * pulls the specified branch from the specified remote
+	 */
 	function pull(path, remote, branch, callback) {
 		var cmd = 'git pull ' + ((remote) ? remote : '') + ' ' + ((branch) ? branch : '');
 		if (repository(path)) {
@@ -801,6 +809,10 @@ module.exports = (function() {
 		}
 	}
 	
+	/*
+	 * reset() - public
+	 * resets the HEAD back to the specified commit hash
+	 */
 	function reset(path, hash, callback) {
 		var cmd = 'git reset -q ' + hash;
 		if (repository(path)) {
@@ -831,6 +843,10 @@ module.exports = (function() {
 		}
 	}
 	
+	/*
+	 * clone() - public
+	 * clones the given git url into the path specified
+	 */
 	function clone(path, url, callback) {
 		var cmd = 'git clone ' + url;
 		process.chdir(path);
@@ -866,6 +882,7 @@ module.exports = (function() {
 		}
 	}
 	
+	// public methods
 	return {
 		history : history,
 		create : create,
