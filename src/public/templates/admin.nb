@@ -16,6 +16,7 @@
 	<h3>Branches</h3>
 	<ul id="branches"></ul>
 	<div class="options">
+		<a href="#merge" id="merge_current" class="button action merge">Merge With...</a>
 		<a href="#newbranch" id="create_branch" class="button action newbranch">New Branch</a>
 		<a href="#checkout" id="checkout_branch" class="button checkout">Checkout</a>
 	</div>

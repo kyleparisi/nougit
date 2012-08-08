@@ -381,7 +381,7 @@
 		});
 	});
 	
-	
+	// revert commit
 	app.post('/reset/:repo', function(req, res) {
 		var hash = req.body.hash
 		git.reset(config['repository_dir'] + '/' + req.param('repo'), hash, function(data) {
@@ -392,6 +392,36 @@
 			}
 			res.write(JSON.stringify(data));
 			res.end();
+		});
+	});
+	
+	// merge branch
+	app.put('/merge/:repo', function(req, res) {
+		var branch = req.body.branch
+		git.merge(config['repository_dir'] + '/' + req.param('repo'), branch, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
+	
+	// revert commit
+	app.post('/clone', function(req, res) {
+		var repo = req.body.repo
+		git.clone(config['repository_dir'], repo, function(data) {
+			if (data['error']) {
+				res.writeHead(500)
+			} else {
+				res.writeHead(200);
+			}
+			res.write(JSON.stringify(data));
+			nougit.generatefile(function() {
+				res.end();
+			});
 		});
 	});
 	

@@ -556,6 +556,39 @@ module.exports = (function() {
 	}
 	
 	/*
+	 * merge - public
+	 * merges the given branch insto the current branch
+	 */
+	function merge(path, branch, callback) {
+		var cmd = 'git merge ' + branch;
+		if (repository(path)) {
+			exec(cmd, function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							error : err || stderr
+						});
+					}
+				// all is good
+				} else {
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							message : stdout || 'Merged ' + branch + '!'
+						});
+					}
+				}
+			});
+		} else {
+			callback.call(this, {
+				error : 'Invalid repository'
+			});
+		}
+	}
+	
+	/*
 	 * remote - public
 	 * contains methods for adding removing and listing remotes
 	 */
@@ -798,6 +831,41 @@ module.exports = (function() {
 		}
 	}
 	
+	function clone(path, url, callback) {
+		var cmd = 'git clone ' + url;
+		process.chdir(path);
+		
+		if (!url) {
+			if (callback) {
+				callback.call(this, {
+					error : 'Please specify a URL'
+				});
+			}
+		} else {
+		
+			exec(cmd, function(err, stdout, stderr) {
+				if (err || stderr) {
+					console.log(err || stderr);
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							error : stderr || 'Clone failed!'
+						});
+					}
+				// all is good
+				} else {
+									
+					if (callback) {
+						process.chdir(back);
+						callback.call(this, {
+							message : stdout 
+						});
+					}
+				}
+			});
+		}
+	}
+	
 	return {
 		history : history,
 		create : create,
@@ -813,7 +881,9 @@ module.exports = (function() {
 		remote : remote,
 		push : push,
 		pull : pull,
-		reset : reset
+		reset : reset,
+		merge : merge,
+		clone : clone
 	};
   
 })();

@@ -103,10 +103,39 @@ nougit['ui'] = (function() {
 			hash : hash
 		}, function(data) {
 			uialert(data.message, 'success');
-			hideDialog(e.target.href);
+			reloadPanel();
+			hideDialog('#revert');
 		}, function(err) {
 			uialert(err.error, 'error');
-		})
+		});
+	});
+	
+	// bind merge
+	_.bind(_.dom.get('#domerge'), 'click', function(e) {
+		var branch = _.dom.get('#thisBranch').innerHTML;
+		nougit.api.put('/merge/' + nougit.repos.current.name, {
+			branch : branch
+		}, function(data) {
+			uialert(data.message, 'success');
+			reloadPanel();
+			hideDialog('#merge');
+		}, function(err) {
+			uialert(err.error, 'error');
+		});
+	});
+	
+	// bind clone repo
+	_.bind(_.dom.get('#doclone'), 'click', function() {
+		_.dom.get('#clone_loader').style.display = 'block';
+		nougit.api.post('/clone' , _.dom.parseForm(_.dom.get('#clone_repo')), function(data) {
+			uialert(data.message, 'success');
+			loadRepos();
+			hideDialog('#cloneRepo');
+			_.dom.get('#clone_loader').style.display = 'none';
+		}, function(err) {
+			uialert(err.error, 'error');
+			_.dom.get('#clone_loader').style.display = 'none';
+		});
 	});
 	
 	
@@ -148,6 +177,7 @@ nougit['ui'] = (function() {
 					});
 					_.each(_.dom.get('.repo'), function() {
 						_.bind(this, 'click', function() {
+							_.dom.deleteClass(_.dom.get('#content'), 'landing');
 							_.each(_.dom.get('.repo'), function() {
 								_.dom.deleteClass(_.dom.get('a', this)[0], 'active');
 							});
@@ -248,24 +278,30 @@ nougit['ui'] = (function() {
 			
 			var commit_list = document.createElement('ul');
 			content.appendChild(commit_list);
-			
-			nougit.api.get('/history/' + nougit.repos.current.name, function(data) {
-				_.each(data, function() {
-					var commit = {
-						author : this.author.split(' <')[0],
-						email : this.author.split('<')[1].replace('>',''),
-						commit : this.commit,
-						message : this.message,
-						date : this.date
-					};
-					neckbeard.get('commits', function(temp) {
+			neckbeard.get('commits', function(temp) {
+				nougit.api.get('/history/' + nougit.repos.current.name, function(data) {
+					_.each(data, function() {
+						var commit = {
+							author : this.author.split(' <')[0],
+							email : this.author.split('<')[1].replace('>',''),
+							commit : this.commit,
+							message : this.message,
+							date : this.date
+						}, i = this;
+					
 						commit_list.innerHTML += neckbeard.compile(temp, commit);
-						var commits = _.dom.get('.commit'),
-						    revert = _.dom.get('.code', commits[commits.length - 1])[0];
-						_.bind(revert, 'click', function(e) {
-							_.dom.get('#which_commit').innerHTML = e.target.innerHTML;
-							showDialog(e.target.href);
-						});
+
+						if (i === data[data.length - 1]) {
+							var commits = _.dom.get('.commit');
+
+							_.each(commits, function() {
+								var revert = _.dom.get('.code', this)[0];
+								_.bind(revert, 'click', function(e) {
+									_.dom.get('#which_commit').innerHTML = e.target.innerHTML;
+									showDialog(e.target.href);
+								});
+							});
+						}
 					});
 				});
 			}, function(err) {
@@ -355,20 +391,20 @@ nougit['ui'] = (function() {
 								file : this.innerHTML,
 								status : this.title
 							});
+							if (files.length === untracked.concat(notstaged).length) {
+								// call api here
+								nougit.api.put('/stage/' + nougit.repos.current.name, {
+									files : files
+								}, function(data) {
+									console.log(data);
+									uialert('Files Staged!', 'success');
+									reloadPanel();
+								}, function(err) {
+									uialert(err.error);
+									reloadPanel();
+								});
+							}
 						});
-						setTimeout(function() {
-							// call api here
-							nougit.api.put('/stage/' + nougit.repos.current.name, {
-								files : files
-							}, function(data) {
-								console.log(data);
-								uialert('Files Staged!', 'success');
-								reloadPanel();
-							}, function(err) {
-								uialert(err.error);
-								reloadPanel();
-							});
-						}, 100);
 					}
 					
 					function stageAll() {
@@ -382,21 +418,20 @@ nougit['ui'] = (function() {
 								file : this.innerHTML,
 								status : this.title
 							});
+							if (files.length === untracked.concat(notstaged).length) {
+								// call api here
+								nougit.api.put('/stage/' + nougit.repos.current.name, {
+									files : files
+								}, function(data) {
+									console.log(data);
+									uialert('Files Staged!', 'success');
+									reloadPanel();
+								}, function(err) {
+									uialert(err.error);
+									reloadPanel();
+								});
+							}
 						});
-						
-						setTimeout(function() {						
-							// call api here
-							nougit.api.put('/stage/' + nougit.repos.current.name, {
-								files : files
-							}, function(data) {
-								console.log(data);
-								uialert('Files staged!', 'success');
-								reloadPanel();
-							}, function(err) {
-								uialert(err);
-								reloadPanel();
-							});
-						}, 100);
 					}
 					
 					function unstageSelected() {
@@ -409,23 +444,20 @@ nougit['ui'] = (function() {
 								file : this.innerHTML,
 								status : this.title
 							});
+							if (selected.length === selected.length) {
+								// call api here
+								nougit.api.put('/unstage/' + nougit.repos.current.name, {
+									files : files
+								}, function(data) {
+									console.log(data);
+									uialert('Files Unstaged!', 'success');
+									reloadPanel();
+								}, function(err) {
+									uialert(err);
+									reloadPanel();
+								});
+							}
 						});
-						
-						console.log(files);
-						
-						setTimeout(function() {
-							// call api here
-							nougit.api.put('/unstage/' + nougit.repos.current.name, {
-								files : files
-							}, function(data) {
-								console.log(data);
-								uialert('Files Unstaged!', 'success');
-								reloadPanel();
-							}, function(err) {
-								uialert(err);
-								reloadPanel();
-							});
-						}, 100);
 					}
 					
 					/* Status Bindings
@@ -565,7 +597,8 @@ nougit['ui'] = (function() {
 					addremote : _.dom.get('#add_remote'),
 					editremote : _.dom.get('#edit_remote'),
 					checkout : _.dom.get('#checkout_branch'),
-					newbranch : _.dom.get('#create_branch')
+					newbranch : _.dom.get('#create_branch'),
+					merge : _.dom.get('#merge_current')
 				}
 				
 				// push to remote
@@ -632,6 +665,21 @@ nougit['ui'] = (function() {
 				// create new branch
 				_.bind(buttons.newbranch, 'click', function(e) {
 					showDialog(e.target.href);
+				});
+				
+				_.bind(buttons.merge, 'click', function(e) {
+					
+					if (_.dom.get('.selected', _.dom.get('#branches'))[0]) {
+						var thisbranch = _.dom.get('#thisBranch'),
+						    thatbranch = _.dom.get('#thatBranch');
+					
+						thisbranch.innerHTML = _.dom.get('.selected', _.dom.get('#branches'))[0].innerHTML;
+						thatbranch.innerHTML = _.dom.get('option', _.dom.get('#selected_branch'))[0].value;
+					
+						showDialog(e.target.href);
+					} else {
+						uialert('Select a branch to merge.', 'error');
+					}
 				});
 				
 			});

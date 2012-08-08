@@ -17,6 +17,15 @@ div#dialogs
 		div.options
 			a.button.cancel(href='#cancel') Cancel
 			a.button.save#save_new_branch(href='#save') Save
+	div#cloneRepo.dialog
+		h2 Clone Repo
+		form#clone_repo
+			label(for='repo') Clone From Url
+			input(type='text', name='repo', placeholder='http://127.0.0.1:8080/repositories/reponame')
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#doclone(href='#save') Clone
+		div.blockloader#clone_loader
 	div#addremote.dialog
 		h2 Add Remote
 		form#add_remote_form
@@ -40,9 +49,21 @@ div#dialogs
 	div#revert.dialog
 		h2 Revert Commit
 		p Are you sure you want to revert to this commit?
-		div#which_commit
+		div#which_commit.code
 		div.options
 			a.button.cancel(href='#cancel') Cancel
 			a.button.save#revert_commit(href='#save') Revert
-
+	div#merge.dialog
+		h2 Merge Branch
+		p Are you sure you want to merge <span class="code" id="thisBranch"></span> with <span class="code" id="thatBranch"></span>?
+		div.options
+			a.button.cancel(href='#cancel') Cancel
+			a.button.save#domerge(href='#save') Merge
+	div#about.dialog
+		h2 About
+		p
+			| <strong>Nougit</strong> - Version 0.5 <br />
+			| Author: Gordon Hall (<a href="http://gordonwritescode.com">www.gordonwritescode.com</a>)
+		div.options
+			a.button.cancel(href='#cancel') Close
 div#alert This is an alert!
