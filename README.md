@@ -26,7 +26,7 @@ So, where is your Nougit installation going to live?
 
 ## Workstation
 
-As a workstation client, Nougit manages your repositories by default in your home directory under `./nougitrepos`. This is configurable by cracking open `config.json` before running Nougit for the first time. When you are ready to get started, navigate to the directory in your terminal where you have installed Nougit and run:
+As a workstation client, Nougit manages your repositories by default in your home directory under `./nougitrepos`. This is configurable by cracking open `config.json` after running Nougit for the first time. When you are ready to get started, navigate to the directory in your terminal where you have installed Nougit and run:
 
 ```shell
 node nougit/app.js
