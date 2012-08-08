@@ -10,13 +10,13 @@ Nougit is **a tasty git client** that runs in your web browser! Who says **sweet
 
 You can install the latest stable release via Node Package Manager:
 
-```bash
+```shell
 $ npm install nougit
 ```
 
 Or you can live on the edge and install the latest and greatest with Git:
 
-```bash
+```shell
 $ git clone https://github.com/gordonwritescode/nougit.git
 ```
 
@@ -28,7 +28,7 @@ So, where is your Nougit installation going to live?
 
 As a workstation client, Nougit manages your repositories by default in your home directory under `./nougitrepos`. This is configurable by cracking open `config.json` before running Nougit for the first time. When you are ready to get started, navigate to the directory in your terminal where you have installed Nougit and run:
 
-```bash
+```shell
 node nougit/app.js
 ```
 
@@ -39,3 +39,18 @@ Nougit will do some quick configuration and setup and when it is finished it wil
 As a server, Nougit manages your repositories internally, inside `./public/repositories`. This allows workstations to clone/push/pull the repos over HTTP without requiring additional authentication. **This is not secure if your server is public.** Nougit is intended for internal networks - not public websites.
 
 > Note that when installing with Git, you **must** remove the `.git` directory if you intend on running Nougit as a server. This is because Nougit manages your repositories internally in this mode.
+
+To run Nougit in server mode:
+
+```shell
+$ node nougit/app.js server
+```
+
+## Contribute
+
+Nougit was written to be a specific solution by one developer for him and his team. Want to make it right for you and your team? Please do! Pull requests are always welcome!
+
+## Author
+
+Nougit 0.5 by Gordon Hall (gordon@gordonwritescode.com)  
+Released under MIT license.

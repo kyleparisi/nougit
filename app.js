@@ -34,7 +34,6 @@
 	// get middleware
 	    express = require('express'),
 	    jade = require('jade'),
-	    db = require('mongojs'),
 	    md = require("node-markdown").Markdown,
 	// create express server
 	    app = module.exports = express.createServer();
