@@ -1,6 +1,6 @@
 {
   "name": "nougit",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A Tasty Git Client",
   "main": "main",
   "dependencies": {
