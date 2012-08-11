@@ -60,12 +60,13 @@ module.exports = function(server) {
 		
 		exec('git config --global user.name', function(err, stdout, stderr) {
 			if (err || stderr) {
-				console.log(err || stderr)
+				console.log('ERROR: Please configure Git username with $ git config --global user.name "Your Name"');
 			} else if (stdout) {
 				user = stdout.replace(/(\r\n|\n|\r)/gm,'');
 				console.log('User: ' + user);
 				exec('git config --global user.email', function(err, stdout, stderr) {
 					if (err || stderr) {
+						console.log('ERROR: Please configure Git email with $ git config --global user.email "name@domain.com"');
 						console.log(err || stderr)
 					} else if (stdout) {
 						email = stdout.replace(/(\r\n|\n|\r)/gm,'');

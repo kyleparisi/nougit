@@ -8,6 +8,8 @@ Nougit is **a tasty git client** that runs in your web browser! Who says **sweet
 * Node.js 0.8.x (http://nodejs.org)
 * Git 1.7.x.x (http://git-scm.com)
 
+> Be sure that you have configured your global git user name and email, otherwise the setup will fail. See http://git-scm.com/book/en/Customizing-Git-Git-Configuration for more information.
+
 You can install the latest stable release via Node Package Manager:
 
 ```shell

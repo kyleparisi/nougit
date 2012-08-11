@@ -36,7 +36,7 @@
 	    jade = require('jade'),
 	    md = require("node-markdown").Markdown,
 	// create express server
-	    app = module.exports = express.createServer();
+	    app = module.exports = express();
 
 	// get user configs
 	setup.init(function(data) {
