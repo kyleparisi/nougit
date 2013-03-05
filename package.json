@@ -1,0 +1,26 @@
+{
+  "main": "app.html",
+  "name": "Nougit",
+  "description": "A Tasty Git Client",
+  "version": "0.1.0",
+  "keywords": ["git","git client","gitty"],
+  "window": {
+    "icon": "link.png",
+    "toolbar": true,
+    "width": 800,
+    "height": 500,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200,
+    "max_width": 800,
+    "max_height": 600
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "author": "Gordon Hall <gordon@gordonwritescode.com>",
+  "dependencies" : {
+      "gitty" :  "1.2.x",
+      "footon" :  "0.3.x"
+  }
+}
