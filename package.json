@@ -1,0 +1,26 @@
+{
+  "main" : "index.html",
+  "name" : "nougit",
+  "description" : "A Tasty Git Client",
+  "version" : "0.1.0",
+  "keywords" : [ "git", "git-gui", "git client" ],
+  "window" : {
+    "icon" : "./assets/icon.png",
+    "toolbar" : true,
+    "width" : 800,
+    "height" : 500,
+    "position" : "mouse",
+    "min_width" : 400,
+    "min_height" : 200,
+    "max_width" : 800,
+    "max_height" : 600
+  },
+  "webkit" : {
+    "plugin" : true
+  },
+  "dependencies" : {
+    "manchu" : "0.2.0",
+    "gitty" : "1.2.2",
+    "footon" : "0.3.10"
+  }
+}
