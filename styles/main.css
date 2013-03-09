@@ -2,3 +2,31 @@
  * Nougit - main.css
  * Author : Gordon Hall
  */
+
+html, body {
+	background: url('../assets/images/bg-red.png') top left repeat;
+}
+
+ #app.blocked {
+ 	-webkit-filter: blur(2px);
+ }
+
+.blocking {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.6);
+}
+
+.loader.big {
+	width: 128px;
+	height: 128px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -64px 0 0 -64px;
+	background: url('../assets/images/loader-big.gif') center center no-repeat;
+	background-size: 64px 64px;
+}

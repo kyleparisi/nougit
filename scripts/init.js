@@ -3,8 +3,9 @@
  * Author : Gordon Hall
  */
 
-(function() {
+$(function() {
 	var nougit = window.nougit = {}
+	  , win = require('nw.gui').Window.get()
 	  , manchu = require('manchu')
 	  , fs = require('fs')
 	  , home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME']
@@ -29,11 +30,15 @@
 	// build templates and load core
 	manchu.build([templates], loadCore);
 
+	// show window since the dom is ready
+	win.show();
+
 	// load all core modules here
 	function loadCore() {
 		// load core modules
 		load([
 			template_path,
+			core + 'actions.js',
 			core + 'main.js',
 			core + 'bindings.js'
 		], function() {

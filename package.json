@@ -6,6 +6,7 @@
   "keywords" : [ "git", "git-gui", "git client" ],
   "window" : {
     "icon" : "./assets/icon.png",
+    "show" : false,
     "toolbar" : true,
     "width" : 800,
     "height" : 500,
