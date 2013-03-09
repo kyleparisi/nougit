@@ -4,11 +4,12 @@
  */
 
 (function() {
-	var manchu = require('manchu')
+	var nougit = window.nougit = {}
+	  , manchu = require('manchu')
 	  , fs = require('fs')
 	  , home = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME']
 	  , templates
-	  , TEMPLATE_PATH = home + '/.nougit/templates.js'
+	  , template_path = home + '/.nougit/templates.js'
 	  , core = './scripts/core/';
 
 	// make sure we have a spot in the users home
@@ -22,7 +23,7 @@
 		type : 'handlebars',
 		name : 'templates',
 	    input : './templates',
-	    output : TEMPLATE_PATH
+	    output : template_path
 	});
 
 	// build templates and load core
@@ -32,15 +33,11 @@
 	function loadCore() {
 		// load core modules
 		load([
-			core + 'bindings.js',
+			template_path,
 			core + 'main.js',
-			TEMPLATE_PATH
+			core + 'bindings.js'
 		], function() {
 			console.log('Nougit:', 'Core Modules Loaded!');
-			// some namespacing setup...
-			if (window.nougit) {
-				nougit.views = Handlebars.templates
-			}
 		});
 	};
 })();
