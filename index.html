@@ -6,21 +6,108 @@
 		<link rel="stylesheet" href="./scripts/lib/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="./styles/animate.min.css" />
 		<link rel="stylesheet" href="./styles/main.css" />
+		<link rel="stylesheet" href="./styles/scrollbar.css" />
 		<link rel="stylesheet" href="./styles/graph.css" />
 		<!-- Load Libraries -->
 		<script type="text/javascript" src="./scripts/lib/jquery-1.9.1.min.js"></script>
 		<script type="text/javascript" src="./scripts/lib/handlebars.runtime.js"></script>
 		<script type="text/javascript" src="./scripts/lib/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="./scripts/lib/bootstrap/js/bootstrap.file-input.js"></script>
 		<!-- Load Scripts -->
 		<script type="text/javascript" src="./scripts/load.js"></script>
 		<script type="text/javascript" src="./scripts/init.js"></script>
 	</head>
 	<body>
-		<div id="app" class="blocked">
-			<div id="repositories"></div>
+		<div id="app" class="container-fluid blocked">
+			<div class="row-fluid">
+				<div id="top_options" class="navbar">
+	  					<div class="navbar-inner">
+	  						<div class="btn-group pull-right">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								    Add Repository
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a tabindex="-1" href="#create_new_repo" data-toggle="modal">Create New</a></li>
+									<li class="divider"></li>
+									<li><a tabindex="-1" href="#" id="add_existing_repo">Manage Existing</a></li>
+									<li><a tabindex="-1" href="#clone_from_url" data-toggle="modal">Clone From URL</a></li>
+								</ul>
+							</div>
+	  					</div>
+	  				</div>
+		    	<div id="sidebar" class="span4">
+		      		<div id="repositories"></div>
+		    	</div>
+		    	<div id="content" class="span8">
+		      		<!--Body content-->
+		    	</div>
+		    	
+		  	</div>
 		</div>
-		<div class="blocking">
+		<div class="blocking" id="loader">
 			<div class="loader big"></div>
+		</div>
+
+		<!-- Create New Dialog -->
+		<div id="create_new_repo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="createNewRepo" aria-hidden="true">
+			<div class="modal-header">
+		  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+		    	<h3 id="createNewRepo">Create a New Repository</h3>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="control-group">
+					    <label class="control-label">Project Name</label>
+					    <div class="controls">
+					    	<input type="text" placeholder="MyAwesomeProject" />
+					    </div>
+					</div>
+					<div class="control-group">
+					    <label class="control-label">Location</label>
+					    <div class="controls">
+					    	<input id="new_repo" type="file" nwdirectory />
+					    </div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+		    	<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		    	<button class="btn btn-primary">Create</button>
+			</div>
+		</div>
+
+		<!-- Existing Repository -->
+		<div id="existing_repo_wrapper">
+			<input id="existing_repo" type="file" nwdirectory />
+		</div>
+		<div id="confirm_existing_repo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addExstingRepo" aria-hidden="true">
+			<div class="modal-header">
+		  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+		    	<h3 id="addExstingRepo">Manage Existing Repository</h3>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+		    	<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		    	<button class="btn btn-primary">Manage</button>
+			</div>
+		</div>
+
+		<!-- Clone From URL -->
+		<div id="clone_from_url" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="cloneFromUrl" aria-hidden="true">
+			<div class="modal-header">
+		  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+		    	<h3 id="cloneFromUrl">Clone a Remote Repository</h3>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+		    	<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		    	<button class="btn btn-primary">Clone</button>
+			</div>
 		</div>
 	</body>
 </html>

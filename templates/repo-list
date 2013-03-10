@@ -1,9 +1,12 @@
 {{#if repos.length}}
-	<ul>
+	<ul class="nav nav-tabs nav-stacked">
 		{{#each repos}}
-			<li></li>
+
 		{{/each}}
 	</ul>
 {{else}}
-	<p>You have no repositories.</p>
+	<div class="alert alert-block">
+		<h4>No Repositories.</h4> 
+		Start by adding or creating a new one!
+	</div>
 {{/if}}

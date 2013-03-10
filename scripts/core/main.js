@@ -16,5 +16,6 @@ nougit.DB.on('ready', function(db) {
 	var repositories = db.get('repositories')
 	  , all_repos = repositories.find({});
 	nougit.actions.renderRepositoryList(all_repos)
-
-})();
+	$('#loader').hide();
+	$('#app').removeClass('blocked');
+});

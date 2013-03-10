@@ -30,9 +30,6 @@ $(function() {
 	// build templates and load core
 	manchu.build([templates], loadCore);
 
-	// show window since the dom is ready
-	win.show();
-
 	// load all core modules here
 	function loadCore() {
 		// load core modules
@@ -43,6 +40,8 @@ $(function() {
 			core + 'bindings.js'
 		], function() {
 			console.log('Nougit:', 'Core Modules Loaded!');
+			// show window since the dom is ready
+			win.show();
 		});
 	};
-})();
+});

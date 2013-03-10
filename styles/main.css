@@ -4,12 +4,37 @@
  */
 
 html, body {
-	background: url('../assets/images/bg-red.png') top left repeat;
+/*	background: url('../assets/images/bg-red.png') top left repeat;
+*/
+}
+
+#app {
+	padding: 0;
 }
 
  #app.blocked {
  	-webkit-filter: blur(2px);
  }
+
+ #top_options {
+ 	position: fixed;
+	width: 100%;
+	z-index: 990;
+ }
+
+ #sidebar {
+ 	position: fixed;
+	height: 100%;
+	overflow: auto;
+ }
+
+ #repositories {
+ 	margin: 68px 12px 24px 12px;
+ }
+
+#existing_repo_wrapper {
+	display: none !important;
+}
 
 .blocking {
 	position: fixed;
